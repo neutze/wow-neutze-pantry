@@ -5,8 +5,8 @@
 **Game version:** World of Warcraft: Forever (Classic Era 1.15 / interface 11509 if Forever isn't listed)
 **Categories:** Bags & Inventory (main), Buffs & Debuffs, Collections
 **License:** MIT
-**Source:** https://github.com/neutze/wow-neutze
-**Issues:** https://github.com/neutze/wow-neutze/issues
+**Source:** https://github.com/neutze/wow-neutze-pantry
+**Issues:** https://github.com/neutze/wow-neutze-pantry/issues
 **Logo:** art/logo-400.png
 **Screenshots:** screenshots/pantry-panel.png, screenshots/potions-explosives.png, screenshots/companion-stable.png
 

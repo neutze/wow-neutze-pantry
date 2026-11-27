@@ -14,7 +14,6 @@ move-folders:
 
 ignore:
   - README.md
-  - CLAUDE.md
   - .github
   - screenshots
   - art

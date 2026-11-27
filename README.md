@@ -1,6 +1,6 @@
 <img src="art/logo-400.png" width="128" align="right" alt="Neutze's logo">
 
-# wow-neutze
+# wow-neutze-pantry
 
 Neutze's add-on suite for World of Warcraft: Forever. Every add-on folder in this repo is one add-on; copy the ones you want into `World of Warcraft/_forever_/Interface/AddOns/`.
 
@@ -51,14 +51,14 @@ Type the mount for this character (bottom of `/np`, or `/stable Swift Palomino`)
 ## Install
 With the CurseForge app: search for **Neutze's** and install it for World of Warcraft: Forever.
 
-By hand: download `Neutze-v0.0.1.zip` from [Releases](https://github.com/neutze/wow-neutze/releases) and put every `NeutzePantry*`, `NeutzeCompanion` and `NeutzeStable` folder into `World of Warcraft/_forever_/Interface/AddOns/`. Turn off the modules you don't want in the AddOns list.
+By hand: download `Neutze-v0.0.1.zip` from [Releases](https://github.com/neutze/wow-neutze-pantry/releases) and put every `NeutzePantry*`, `NeutzeCompanion` and `NeutzeStable` folder into `World of Warcraft/_forever_/Interface/AddOns/`. Turn off the modules you don't want in the AddOns list.
 
 ## Known limits
 - English game client only: items are recognised by their tooltip text.
 - No ignore list of its own yet; if Buffet is installed, its ignored items are skipped.
 - Macros are only changed out of combat.
 
-Bugs and ideas: [GitHub issues](https://github.com/neutze/wow-neutze/issues).
+Bugs and ideas: [GitHub issues](https://github.com/neutze/wow-neutze-pantry/issues).
 
 ## License
 MIT
