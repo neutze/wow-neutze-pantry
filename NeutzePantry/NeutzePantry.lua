@@ -11,19 +11,19 @@ function BF.has(s, ...) for _, w in ipairs({...}) do if s:find(w, 1, true) then 
 
 -- ---------- class / spec: one stat priority per character, shared by all modules ----------
 local DEFAULTS = {
-  WARRIOR = {"str","sta","ap","agi","armor"},  ROGUE  = {"agi","ap","str","sta"},
-  HUNTER  = {"agi","ap","int","sta"},          MAGE   = {"sp","int","spi","sta"},
-  WARLOCK = {"sp","sta","int","spi"},
+  WARRIOR = {"str","ap","breath","sta","agi","armor"},  ROGUE  = {"agi","ap","breath","str","sta"},
+  HUNTER  = {"agi","ap","breath","int","sta"},  MAGE   = {"sp","breath","int","spi","sta"},
+  WARLOCK = {"sp","breath","sta","int","spi"},
 }
 BF.ALL = {"str","agi","sta","int","spi","ap","sp","heal","hit","crit","mp5","hp5","armor","breath","speed"}
 BF.SPECS = {
   WARRIOR = { {"Arms / Fury", DEFAULTS.WARRIOR}, {"Protection", {"sta","armor","str","agi"}} },
   ROGUE   = { {"All specs", DEFAULTS.ROGUE} },
   HUNTER  = { {"All specs", DEFAULTS.HUNTER} },
-  PALADIN = { {"Holy", {"heal","int","mp5","spi","sta"}}, {"Protection", {"sta","armor","str","sp"}}, {"Retribution", {"str","ap","agi","sta","int"}} },
-  SHAMAN  = { {"Elemental", {"sp","int","mp5","sta"}}, {"Enhancement", {"str","agi","ap","sta","int"}}, {"Restoration", {"heal","int","mp5","sta"}} },
-  DRUID   = { {"Balance", {"sp","int","mp5","spi","sta"}}, {"Feral (Cat)", {"agi","str","ap","sta"}}, {"Feral (Bear)", {"sta","agi","armor","str"}}, {"Restoration", {"heal","int","mp5","spi","sta"}} },
-  PRIEST  = { {"Holy / Discipline", {"heal","int","spi","mp5","sta"}}, {"Shadow", {"sp","int","sta","spi"}} },
+  PALADIN = { {"Holy", {"heal","int","mp5","spi","sta"}}, {"Protection", {"sta","armor","str","sp"}}, {"Retribution", {"str","ap","breath","agi","sta","int"}} },
+  SHAMAN  = { {"Elemental", {"sp","breath","int","mp5","sta"}}, {"Enhancement", {"str","agi","ap","breath","sta","int"}}, {"Restoration", {"heal","int","mp5","sta"}} },
+  DRUID   = { {"Balance", {"sp","breath","int","mp5","spi","sta"}}, {"Feral (Cat)", {"agi","str","ap","breath","sta"}}, {"Feral (Bear)", {"sta","agi","armor","str"}}, {"Restoration", {"heal","int","mp5","spi","sta"}} },
+  PRIEST  = { {"Holy / Discipline", {"heal","int","spi","mp5","sta"}}, {"Shadow", {"sp","breath","int","sta","spi"}} },
   MAGE    = { {"All specs", DEFAULTS.MAGE} },
   WARLOCK = { {"All specs", DEFAULTS.WARLOCK} },
 }
