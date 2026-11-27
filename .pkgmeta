@@ -1,0 +1,19 @@
+package-as: NeutzePantry
+
+move-folders:
+  NeutzePantry/NeutzePantry: NeutzePantry
+  NeutzePantry/NeutzePantry_Basics: NeutzePantry_Basics
+  NeutzePantry/NeutzePantry_WellFed: NeutzePantry_WellFed
+  NeutzePantry/NeutzePantry_Elixirs: NeutzePantry_Elixirs
+  NeutzePantry/NeutzePantry_Flasks: NeutzePantry_Flasks
+  NeutzePantry/NeutzePantry_Potions: NeutzePantry_Potions
+  NeutzePantry/NeutzePantry_Dynamite: NeutzePantry_Dynamite
+  NeutzePantry/NeutzePantry_Alchemy: NeutzePantry_Alchemy
+
+ignore:
+  - README.md
+  - .github
+
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
