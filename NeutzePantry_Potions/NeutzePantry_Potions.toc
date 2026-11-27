@@ -2,7 +2,7 @@
 ## Title: Neutze's Battle Potions
 ## Notes: Short combat potion buttons (PotionRage, PotionFreeAction, ...). Part of Neutze's Pantry (needs the core). /pantry
 ## Author: Johannes (written with Claude)
-## Version: 0.0.3
+## Version: 0.0.1
 ## Dependencies: NeutzePantry
 ## X-Part-Of: Neutze's Pantry
 

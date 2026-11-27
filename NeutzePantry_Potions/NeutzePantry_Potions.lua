@@ -1,6 +1,6 @@
 local BF = NeutzePantry
 local MAX_SECONDS = 120   -- "combat" potion = buff of 2 minutes or less (e.g. 30 sec)
-BF.RegisterSection({ kind="potion", title="Combat potions (short buffs)", noun="combat potion", order=50,
+BF.RegisterSection({ display=5, kind="potion", title="Combat potions (short buffs)", noun="combat potion", order=50,
   classify = function(name, text, use, deals)
     if BF.has(name, "potion", "draught") and use ~= "" then
       local sec = tonumber(use:match("(%d+) sec"))

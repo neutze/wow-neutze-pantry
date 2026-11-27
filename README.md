@@ -4,7 +4,7 @@ Neutze's add-on suite for World of Warcraft: Forever. Every add-on folder in thi
 
 | Suite | Status |
 |---|---|
-| **Neutze's Pantry** (below) | v0.0.3 |
+| **Neutze's Pantry** (below) | v0.0.1 (coming) |
 | Neutze's Companion (auto-summon your chosen pet) | planned |
 | Neutze's Stable (mount macro per character) | planned |
 

@@ -19,7 +19,7 @@ local CATS = {
   { key="int",   macro="AutoIntellect",  label="Intellect",    words={"intellect"} },
   { key="sta",   macro="AutoStamina",    label="Stamina",      words={"stamina"} },
   { key="spi",   macro="AutoSpirit",     label="Spirit",       words={"spirit"} },
-  { key="any",   macro="AutoWellFed",    label="Any (priority)", words={"pool:never"} },
+  { key="any",   macro="AutoWellFed",    label="Any (priority)", tip="Best food of your top stat; falls back down your priority list.", words={"pool:never"} },
 }
 local LABEL = {}; for _, c in ipairs(CATS) do LABEL[c.key] = c.label end
 
@@ -47,7 +47,7 @@ end
 
 local function use(id) return "#showtooltip\n/use item:" .. id end
 
-BF.RegisterSection({ kind="food", title="Well Fed food", noun="food", order=60,
+BF.RegisterSection({ display=2, kind="food", title="Well Fed food", noun="food", order=60,
   classify = function(name, text)
     local pos
     for _, w in ipairs(FED) do local q = text:find(w, 1, true); if q and (not pos or q < pos) then pos = q end end
@@ -67,24 +67,16 @@ BF.RegisterSection({ kind="food", title="Well Fed food", noun="food", order=60,
     if c.key ~= "fish" and best.fish then return use(best.fish.loId) end
     return nil
   end,
-  extraUI = function(panel, anchor)
-    local h = panel:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    h:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -6)
+  extraUI = function(parent, anchor)
+    local h = parent:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    h:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -8)
     h:SetText("Fallback order for this character (click a stat to move it up). Fishing is always last:")
-    local row, last = {}
+    local row = {}
     local function refresh()
-      for i, k in ipairs(Priority()) do
-        local b = row[i]
-        b:SetText(i .. ". " .. LABEL[k])
-        b.key = k
-      end
+      for i, k in ipairs(Priority()) do row[i]:SetText(i .. ". " .. LABEL[k]); row[i].key = k end
     end
     for i = 1, #ALL do
-      local b = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
-      b:SetSize(88, 20)
-      if i == 1 then b:SetPoint("TOPLEFT", h, "BOTTOMLEFT", 0, -4)
-      elseif i == 7 then b:SetPoint("TOPLEFT", row[1], "BOTTOMLEFT", 0, -2)
-      else b:SetPoint("LEFT", last, "RIGHT", 2, 0) end
+      local b = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
       b:SetScript("OnClick", function(self)
         local p = Priority()
         for j, k in ipairs(p) do
@@ -92,9 +84,13 @@ BF.RegisterSection({ kind="food", title="Well Fed food", noun="food", order=60,
         end
         refresh(); BF.Update()
       end)
-      row[i] = b; last = b
+      row[i] = b
     end
+    -- size every button for the longest possible label, then lay them out
+    for i, b in ipairs(row) do b:SetText("11. Attack Power") end
+    local last, rows = BF.LayoutButtons(row, h, -4)
     refresh()
-    return row[7]
+    BF.AddHeight(22 + rows * 25)
+    return last
   end,
   cats = CATS })

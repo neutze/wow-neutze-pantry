@@ -143,22 +143,48 @@ local function MakeOrPickup(c)
   PickupMacro(id)
 end
 
-local function Section(sec, anchor, yOff)
-  local h = panel:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-  h:SetText(sec.title)
-  h:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, yOff)
-  local perRow, w, last, rowStart = 5, 118
-  for i, c in ipairs(sec.cats) do
-    local b = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
+-- Buttons size themselves to their label; rows wrap to the panel width.
+local CONTENT_W = 600
+local function TextWidth(b)
+  local fs = b.GetFontString and b:GetFontString()
+  local w = fs and fs.GetStringWidth and fs:GetStringWidth()
+  return (type(w) == "number" and w > 0) and w or 90
+end
+BF.TextWidth = TextWidth
+BF.CONTENT_W = function() return CONTENT_W end
+
+-- Lays out a list of buttons in rows. Returns the last row's first button and the number of rows.
+function BF.LayoutButtons(buttons, anchor, yOff)
+  local w = 90
+  for _, b in ipairs(buttons) do w = math.max(w, TextWidth(b) + 26) end
+  local perRow = math.max(1, math.floor((CONTENT_W + 3) / (w + 3)))
+  local rowStart, last
+  for i, b in ipairs(buttons) do
     b:SetSize(w, 22)
-    b:SetText(c.label)
-    if i == 1 then b:SetPoint("TOPLEFT", h, "BOTTOMLEFT", 0, -4); rowStart = b
+    b:ClearAllPoints()
+    if i == 1 then b:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, yOff); rowStart = b
     elseif (i - 1) % perRow == 0 then b:SetPoint("TOPLEFT", rowStart, "BOTTOMLEFT", 0, -3); rowStart = b
     else b:SetPoint("LEFT", last, "RIGHT", 3, 0) end
+    last = b
+  end
+  return rowStart, math.ceil(#buttons / perRow)
+end
+
+local content, usedHeight = nil, 0
+
+local function Section(sec, anchor, yOff)
+  local h = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  h:SetText(sec.title)
+  h:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, yOff)
+  local buttons = {}
+  for _, c in ipairs(sec.cats) do
+    local b = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
+    b:SetText(c.label)
     b:SetScript("OnClick", function() MakeOrPickup(c) end)
     b:SetScript("OnEnter", function(self)
       GameTooltip:SetOwner(self, "ANCHOR_TOP")
       GameTooltip:AddLine(c.macro)
+      if c.tip then GameTooltip:AddLine(c.tip, .9, .9, .9, true) end
       local all = BF.Scan()[sec.kind]
       local pick = all[c.key]
       if sec.body and not pick then
@@ -166,37 +192,55 @@ local function Section(sec, anchor, yOff)
         local id = body and tonumber(body:match("item:(%d+)[^\n]*$"))
         pick = id and { id = id, v = 0 }
       end
-      GameTooltip:AddLine(pick and ("Uses: " .. ((GetItemInfo(pick.id)) or ("item " .. pick.id)) .. " (" .. pick.v .. ")") or ("No " .. c.label .. " " .. sec.noun .. " in your bags"), 1, 1, 1, true)
+      GameTooltip:AddLine(pick and ("Uses: " .. ((GetItemInfo(pick.id)) or ("item " .. pick.id)) .. (pick.v > 0 and (" (" .. pick.v .. ")") or "")) or ("No " .. c.label .. " " .. sec.noun .. " in your bags"), 1, 1, 1, true)
       local id = GetMacroIndexByName(c.macro)
       GameTooltip:AddLine((id and id > 0) and "Click to pick it up and drop it on a bar." or "Click to create it in your General macros and pick it up.", .7, .7, .7, true)
       GameTooltip:Show()
     end)
     b:SetScript("OnLeave", GameTooltip_Hide)
-    last = b
+    buttons[#buttons + 1] = b
   end
-  return rowStart
+  local last, rows = BF.LayoutButtons(buttons, h, -4)
+  usedHeight = usedHeight + 18 + rows * 25 + 12
+  return last
 end
+
+function BF.AddHeight(px) usedHeight = usedHeight + px end
 
 panel:SetScript("OnShow", function(self)
   if self.built then return end
   self.built = true
-  local title = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-  title:SetPoint("TOPLEFT", 16, -16)
+  local scroll = CreateFrame("ScrollFrame", nil, self, "UIPanelScrollFrameTemplate")
+  scroll:SetPoint("TOPLEFT", 0, -4)
+  scroll:SetPoint("BOTTOMRIGHT", -28, 4)
+  content = CreateFrame("Frame", nil, scroll)
+  local sw = scroll.GetWidth and scroll:GetWidth()
+  if type(sw) == "number" and sw > 200 then CONTENT_W = math.floor(sw) - 40 end
+  content:SetSize(CONTENT_W + 32, 1)
+  scroll:SetScrollChild(content)
+
+  local title = content:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+  title:SetPoint("TOPLEFT", 16, -12)
   title:SetText("Neutze's Pantry")
-  local sub = self:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+  local sub = content:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
   sub:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -6)
-  sub:SetWidth(600); sub:SetJustifyH("LEFT")
-  sub:SetText("Click a button to create its macro (General tab) and pick it up. Each macro always uses the strongest matching item in your bags. Turn sections on or off with the Neutze's modules in the AddOns list.")
-  local anchor, gap = sub, -12
-  if #BF.sections == 0 then
-    local none = self:CreateFontString(nil, "ARTWORK", "GameFontRed")
+  sub:SetWidth(CONTENT_W); sub:SetJustifyH("LEFT")
+  sub:SetText("Click a button to create its macro (General tab) and pick it up. Each macro always uses the best matching item in your bags. Hover a button to see which item. Turn sections on or off with the Neutze's modules in the AddOns list.")
+  usedHeight = 70
+  local anchor, gap = sub, -14
+  local list = {}
+  for _, sec in ipairs(BF.sections) do list[#list + 1] = sec end
+  table.sort(list, function(a, b) return (a.display or a.order) < (b.display or b.order) end)
+  if #list == 0 then
+    local none = content:CreateFontString(nil, "ARTWORK", "GameFontRed")
     none:SetPoint("TOPLEFT", sub, "BOTTOMLEFT", 0, -12)
     none:SetText("No Neutze's Pantry modules are enabled.")
   end
-  for _, sec in ipairs(BF.sections) do
-    anchor = Section(sec, anchor, gap); gap = -12
-    if sec.extraUI then anchor = sec.extraUI(self, anchor) or anchor end
+  for _, sec in ipairs(list) do
+    anchor = Section(sec, anchor, gap); gap = -14
+    if sec.extraUI then anchor = sec.extraUI(content, anchor) or anchor end
   end
+  content:SetHeight(usedHeight + 40)
 end)
 
 if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then

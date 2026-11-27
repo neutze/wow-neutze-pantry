@@ -8,7 +8,7 @@ end
 
 local function item(best, key) return best[key] and ("item:" .. best[key].id) end
 
-BF.RegisterSection({ kind="basic", title="Basics: food, drink, potions, stones", noun="item", order=70, useMax=true,
+BF.RegisterSection({ display=1, kind="basic", title="Basics: food, drink, potions, stones", noun="item", order=70, useMax=true,
   classify = function(name, text, use, deals)
     if use == "" then return nil end
     local conjured = text:find("conjured item", 1, true)
@@ -46,8 +46,8 @@ BF.RegisterSection({ kind="basic", title="Basics: food, drink, potions, stones",
     return "#showtooltip\n/use " .. table.concat(parts, "; ")
   end,
   cats = {
-    { key="hp",      macro="PantryHP",      label="HP: food / stone / pot",  words={"pool:hp-never"} },
-    { key="mp",      macro="PantryMP",      label="MP: drink / gem / pot",   words={"pool:mp-never"} },
+    { key="hp",      macro="PantryHP",      label="Health (auto)", tip="Out of combat: best food (Hearthstone if none). In combat: Healthstone, else best health potion.",  words={"pool:hp-never"} },
+    { key="mp",      macro="PantryMP",      label="Mana (auto)", tip="Out of combat: best drink (Hearthstone if none). In combat: mana gem, else best mana potion.",   words={"pool:mp-never"} },
     { key="food",    macro="PantryFood",    label="Food only",          words={"pool:food"} },
     { key="drink",   macro="PantryDrink",   label="Drink only",         words={"pool:drink"} },
     { key="hppot",   macro="PantryHPPot",   label="Health potion",      words={"pool:hppot"} },
