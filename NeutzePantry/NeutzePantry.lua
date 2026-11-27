@@ -199,7 +199,8 @@ elseif InterfaceOptions_AddCategory then
 end
 
 SLASH_NEUTZEPANTRY1 = "/pantry"
-SLASH_NEUTZEPANTRY2 = "/bf"
+SLASH_NEUTZEPANTRY2 = "/np"
+SLASH_NEUTZEPANTRY3 = "/bf"
 SlashCmdList.NEUTZEPANTRY = function(msg)
   if msg and msg:lower():find("list") then
     BF.Update()
