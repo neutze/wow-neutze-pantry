@@ -310,7 +310,7 @@ local scroll, specDD, Build
 -- Class / spec dropdown at the top of the panel; picking a spec re-sorts every section.
 local function SpecRow(anchor)
   local sl = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-  sl:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -14)
+  sl:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -16)
   local _, cname = UnitClass("player")
   sl:SetText((UnitClass("player") or cname or "Class") .. " spec:")
   local function pick(i) BF.ApplySpec(i); BF.Update(); Build() end
@@ -367,7 +367,8 @@ local function BuildPanel(self)
   sub:SetWidth(CONTENT_W); sub:SetJustifyH("LEFT")
   sub:SetText("Click a button to create its macro (General tab) and pick it up. Each macro always uses the best matching item in your bags. Hover a button to see which item. Turn sections on or off with the Neutze's modules in the AddOns list.")
   usedHeight = 70
-  local anchor, gap = SpecRow(sub), -14
+  local anchor, gap = sub, -14
+  local specShown = false
   local list = {}
   for _, sec in ipairs(BF.sections) do list[#list + 1] = sec end
   table.sort(list, function(a, b) return (a.display or a.order) < (b.display or b.order) end)
@@ -377,6 +378,9 @@ local function BuildPanel(self)
     none:SetText("No Neutze's Pantry modules are enabled.")
   end
   for _, sec in ipairs(list) do
+    if sec.sortBySpec and not specShown then   -- one spec picker, right after the basics, before the stat sections
+      anchor, specShown = SpecRow(anchor), true
+    end
     if sec.custom then                       -- e.g. Companion / Stable text fields
       local h = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
       h:SetText(sec.title)
