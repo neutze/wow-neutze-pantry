@@ -323,7 +323,7 @@ local content, usedHeight = nil, 0
 
 local function Section(sec, anchor, yOff)
   local h = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-  h:SetText(sec.title)
+  h:SetText(sec.heading or "")              -- the page title already names the module
   h:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, yOff)
   local buttons, cats = {}, {}
   for i, c in ipairs(sec.cats) do cats[i] = c end
@@ -394,15 +394,52 @@ end
 
 function BF.AddHeight(px) usedHeight = usedHeight + px end
 
-local scroll, specDD, Build
+local specDD
 
--- Class / spec dropdown at the top of the panel; picking a spec re-sorts every section.
+-- Role shown next to the spec (derived from it, so there is only one thing to pick).
+function BF.Role()
+  local n = BF.SpecName()
+  if n:find("Protection") or n:find("Bear") then return "Tank" end
+  if n:find("Holy") or n:find("Restoration") or n:find("Discipline") then return "Healer" end
+  return "Damage"
+end
+
+-- Each options page gets its own scroll frame; content/usedHeight are the page being built right now.
+local function NewCanvas(frame)
+  if not frame.scroll then
+    frame.scroll = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
+    frame.scroll:SetPoint("TOPLEFT", 0, -4)
+    frame.scroll:SetPoint("BOTTOMRIGHT", -28, 4)
+  end
+  if frame.content then frame.content:Hide() end
+  content = CreateFrame("Frame", nil, frame.scroll)
+  frame.content = content
+  local sw = frame.scroll.GetWidth and frame.scroll:GetWidth()
+  if type(sw) == "number" and sw > 200 then CONTENT_W = math.floor(sw) - 40 end
+  content:SetSize(CONTENT_W + 32, 1)
+  frame.scroll:SetScrollChild(content)
+  usedHeight = 70
+end
+
+local function Header(titleText, subText)
+  local title = content:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+  title:SetPoint("TOPLEFT", 16, -12)
+  title:SetText(titleText)
+  local sub = content:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+  sub:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -6)
+  sub:SetWidth(CONTENT_W); sub:SetJustifyH("LEFT")
+  sub:SetText(subText)
+  return sub
+end
+
+-- Class / spec dropdown (main page); picking a spec re-sorts every module page.
 local function SpecRow(anchor)
   local sl = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
   sl:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -16)
   local _, cname = UnitClass("player")
   sl:SetText((UnitClass("player") or cname or "Class") .. " spec:")
-  local function pick(i) BF.ApplySpec(i); BF.Update(); Build() end
+  local role = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  local function pick(i) BF.ApplySpec(i); BF.Update(); BF.Rebuild() end
   if UIDropDownMenu_Initialize then
     if not specDD then
       specDD = CreateFrame("Frame", "NeutzePantrySpecDropDown", content, "UIDropDownMenuTemplate")
@@ -419,6 +456,7 @@ local function SpecRow(anchor)
     specDD:SetParent(content); specDD:Show()
     specDD:ClearAllPoints(); specDD:SetPoint("LEFT", sl, "RIGHT", -8, -2)
     UIDropDownMenu_SetText(specDD, BF.SpecName())
+    role:SetPoint("LEFT", specDD, "RIGHT", 120, 2)
   else
     local b = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
     b:SetSize(170, 22); b:SetPoint("LEFT", sl, "RIGHT", 8, 0); b:SetText(BF.SpecName())
@@ -427,71 +465,68 @@ local function SpecRow(anchor)
       for i, sp in ipairs(specs) do if sp[1] == BF.SpecName() then cur = i end end
       pick(cur % math.max(1, #specs) + 1)
     end)
+    role:SetPoint("LEFT", b, "RIGHT", 16, 0)
   end
+  role:SetText("Role: |cffffffff" .. BF.Role() .. "|r")
   local note = content:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-  note:SetPoint("TOPLEFT", sl, "BOTTOMLEFT", 0, -10)
-  note:SetText("Buttons are sorted best-first for this spec. \"Best for my spec\" eats the right food for it.")
-  usedHeight = usedHeight + 44
+  note:SetPoint("TOPLEFT", sl, "BOTTOMLEFT", 0, -12)
+  note:SetWidth(CONTENT_W); note:SetJustifyH("LEFT")
+  note:SetText("Food, elixir, flask, potion, scroll and juju buttons are sorted best-first for this spec, \"Best for my spec\" eats the right food, and Weapon Buffs picks wizard oil for casters.")
+  usedHeight = usedHeight + 60
   return note
 end
 
-local function BuildPanel(self)
-  if not scroll then
-    scroll = CreateFrame("ScrollFrame", nil, self, "UIPanelScrollFrameTemplate")
-    scroll:SetPoint("TOPLEFT", 0, -4)
-    scroll:SetPoint("BOTTOMRIGHT", -28, 4)
-  end
-  if content then content:Hide() end
-  content = CreateFrame("Frame", nil, scroll)
-  local sw = scroll.GetWidth and scroll:GetWidth()
-  if type(sw) == "number" and sw > 200 then CONTENT_W = math.floor(sw) - 40 end
-  content:SetSize(CONTENT_W + 32, 1)
-  scroll:SetScrollChild(content)
-
-  local title = content:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-  title:SetPoint("TOPLEFT", 16, -12)
-  title:SetText("Neutze's Pantry")
-  local sub = content:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-  sub:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -6)
-  sub:SetWidth(CONTENT_W); sub:SetJustifyH("LEFT")
-  sub:SetText("Click a button to create its macro (General tab) and pick it up. Each macro always uses the best matching item in your bags. Hover a button to see which item. Turn sections on or off with the Neutze's modules in the AddOns list.")
-  usedHeight = 70
-  local anchor, gap = sub, -14
-  local specShown = false
+local function SortedSections()
   local list = {}
   for _, sec in ipairs(BF.sections) do list[#list + 1] = sec end
   table.sort(list, function(a, b) return (a.display or a.order) < (b.display or b.order) end)
-  if #list == 0 then
-    local none = content:CreateFontString(nil, "ARTWORK", "GameFontRed")
-    none:SetPoint("TOPLEFT", sub, "BOTTOMLEFT", 0, -12)
-    none:SetText("No Neutze's Pantry modules are enabled.")
-  end
-  for _, sec in ipairs(list) do
-    if sec.sortBySpec and not specShown then   -- one spec picker, right after the basics, before the stat sections
-      anchor, specShown = SpecRow(anchor), true
-    end
-    if sec.custom then                       -- e.g. Companion / Stable text fields
-      local h = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-      h:SetText(sec.title)
-      h:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, gap)
-      anchor = sec.custom(content, h) or h
-      usedHeight = usedHeight + 18 + (sec.height or 70) + 12
-    else
-      anchor = Section(sec, anchor, gap)
-      if sec.extraUI then anchor = sec.extraUI(content, anchor) or anchor end
-    end
-    gap = -14
+  return list
+end
+local function PageName(sec) return sec.page or sec.title end
+
+-- First page: spec and role, and which module pages you have.
+local function BuildMain(frame)
+  NewCanvas(frame)
+  local sub = Header("Neutze's Pantry", "Pick your spec here. Every module you have enabled has its own page below Neutze's Pantry on the left: click a button there to create its macro (General tab) and drop it on a bar. Turn modules on or off in the AddOns list.")
+  local anchor = SpecRow(sub)
+  local names = {}
+  for _, sec in ipairs(SortedSections()) do names[#names + 1] = PageName(sec) end
+  local l = content:CreateFontString(nil, "OVERLAY", #names > 0 and "GameFontHighlightSmall" or "GameFontRed")
+  l:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -16)
+  l:SetWidth(CONTENT_W); l:SetJustifyH("LEFT")
+  l:SetText(#names > 0 and ("Your modules: " .. table.concat(names, ", ") .. ".") or "No Neutze's Pantry modules are enabled.")
+  usedHeight = usedHeight + 40
+  content:SetHeight(usedHeight + 40)
+end
+
+-- One page per module (section).
+local function BuildSection(frame, sec)
+  NewCanvas(frame)
+  local text = sec.custom and "" or "Click a button to create its macro (General tab) and pick it up. Each macro always uses the best matching item in your bags; hover a button to see which."
+  if sec.sortBySpec then text = text .. " Sorted best-first for |cffffffff" .. BF.SpecName() .. "|r (change it on the Neutze's Pantry page)." end
+  local sub = Header(PageName(sec), text)
+  local anchor
+  if sec.custom then
+    anchor = sec.custom(content, sub) or sub
+    usedHeight = usedHeight + (sec.height or 70) + 12
+  else
+    anchor = Section(sec, sub, -14)
+    if sec.extraUI then sec.extraUI(content, anchor) end
   end
   content:SetHeight(usedHeight + 40)
 end
-Build = function() BuildPanel(panel) end
-BF.Rebuild = function() if scroll then Build() end end
 
-panel:SetScript("OnShow", function(self)
-  if self.built then return end
-  self.built = true
-  BuildPanel(self)
-end)
+local built = {}            -- frame -> rebuild function, for pages that have been shown
+local function Lazy(frame, build)
+  frame:SetScript("OnShow", function(self)
+    if self.built then return end
+    self.built = true
+    build(self)
+    built[self] = function() build(self) end
+  end)
+end
+Lazy(panel, BuildMain)
+BF.Rebuild = function() for _, rebuild in pairs(built) do rebuild() end end
 
 if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
   category = Settings.RegisterCanvasLayoutCategory(panel, panel.name)
@@ -526,18 +561,42 @@ function BF.Open()
   elseif InterfaceOptionsFrame_OpenToCategory then InterfaceOptionsFrame_OpenToCategory(panel); InterfaceOptionsFrame_OpenToCategory(panel) end
 end
 
--- Sub-pages: Neutze's add-ons that need Pantry (Companion, Stable, Macros) put their own options page
--- under "Neutze's Pantry". Returns a function that opens that page.
-function BF.AddSubPage(page)
+-- Sub-pages under "Neutze's Pantry": one per module, then Companion / Stable / Macros (BF.AddSubPage).
+-- They are registered together at login, so the list is in module order whatever order the add-ons load in.
+local queued, registered = {}, false
+local function Register(q)
+  local page = q.page
   page.parent = panel.name                       -- old options window: nest under Neutze's Pantry
-  local sub
   if category and Settings and Settings.RegisterCanvasLayoutSubcategory then
-    sub = Settings.RegisterCanvasLayoutSubcategory(category, page, page.name)
+    q.sub = Settings.RegisterCanvasLayoutSubcategory(category, page, page.name)
   elseif InterfaceOptions_AddCategory then
     InterfaceOptions_AddCategory(page)
   end
+end
+local function Opener(q)
   return function()
-    if sub and Settings and Settings.OpenToCategory then Settings.OpenToCategory(sub:GetID())
-    elseif InterfaceOptionsFrame_OpenToCategory then InterfaceOptionsFrame_OpenToCategory(page); InterfaceOptionsFrame_OpenToCategory(page) end
+    if q.sub and Settings and Settings.OpenToCategory then Settings.OpenToCategory(q.sub:GetID())
+    elseif InterfaceOptionsFrame_OpenToCategory then InterfaceOptionsFrame_OpenToCategory(q.page); InterfaceOptionsFrame_OpenToCategory(q.page) end
   end
 end
+-- Returns a function that opens the page.
+function BF.AddSubPage(page, order)
+  local q = { page = page, order = order or 1000 + #queued }
+  if registered then Register(q) else queued[#queued + 1] = q end
+  return Opener(q)
+end
+local function RegisterAll()
+  if registered then return end
+  for _, sec in ipairs(SortedSections()) do
+    local f = CreateFrame("Frame")
+    f.name = PageName(sec)
+    Lazy(f, function(self) BuildSection(self, sec) end)
+    queued[#queued + 1] = { page = f, order = sec.display or sec.order }
+  end
+  table.sort(queued, function(x, y) return x.order < y.order end)
+  for _, q in ipairs(queued) do Register(q) end
+  registered = true
+end
+local login = CreateFrame("Frame")
+login:RegisterEvent("PLAYER_LOGIN")
+login:SetScript("OnEvent", RegisterAll)

@@ -1,6 +1,6 @@
 -- Scrolls: Scroll of Agility/Strength/Stamina/Intellect/Spirit/Protection, highest rank first.
 local BF = NeutzePantry
-BF.RegisterSection({ sortBySpec=true, display=3.5, kind="scroll", title="Scrolls", noun="scroll", order=45,
+BF.RegisterSection({ page="Scrolls", sortBySpec=true, display=3.5, kind="scroll", title="Scrolls", noun="scroll", order=45,
   classify = function(name, text, use, deals)
     if BF.has(name, "scroll of") and use ~= "" and not deals then return use end
   end,

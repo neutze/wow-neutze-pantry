@@ -1,5 +1,5 @@
 local BF = NeutzePantry
-BF.RegisterSection({ display=6, kind="explosive", title="Engineering explosives", noun="explosive", order=10, useMax=true,
+BF.RegisterSection({ page="Explosives", display=6, kind="explosive", title="Engineering explosives", noun="explosive", order=10, useMax=true,
   classify = function(name, text, use, deals)
     if deals and BF.has(name, "dynamite", "bomb", "grenade", "sapper", "explosive", "land mine", "charge") then return use end
   end,

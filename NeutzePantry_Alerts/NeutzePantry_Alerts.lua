@@ -472,7 +472,7 @@ local function Note(parent, anchor, y, text, font)
   return fs
 end
 
-local SEC = { display = 90, order = 95, title = "Alerts: buffs, stock and shopping" }
+local SEC = { display = 90, order = 95, page = "Alerts", title = "Alerts: buffs, stock and shopping" }
 SEC.custom = function(p, h)
   local d = DB()
   local height = 0

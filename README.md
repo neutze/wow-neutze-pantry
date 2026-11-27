@@ -12,7 +12,7 @@ Neutze's Pantry for World of Warcraft: Forever: one core plus modules, each its 
 
 One macro button per job, always using the **best item in your bags**. Built for World of Warcraft: Forever.
 
-Type `/np` (or `/pantry`, `/neutze`), click a button to create its macro, drop it on your bar. When you carry better items, the macro updates itself (out of combat). Every macro uses the empty "?" icon, so the button shows the item it will use.
+Type `/np` (or `/pantry`, `/neutze`) and pick your spec. Each enabled module has its own page under Neutze's Pantry in the options: click a button there to create its macro, then drop it on your bar. When you carry better items, the macro updates itself (out of combat). Every macro uses the empty "?" icon, so the button shows the item it will use.
 
 | Add-on | What you get |
 |---|---|
