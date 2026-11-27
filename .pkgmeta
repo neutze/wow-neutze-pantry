@@ -15,6 +15,7 @@ move-folders:
   Neutze/NeutzePantry_Runes: NeutzePantry_Runes
   Neutze/NeutzePantry_WeaponBuffs: NeutzePantry_WeaponBuffs
   Neutze/NeutzePantry_Ammo: NeutzePantry_Ammo
+  Neutze/NeutzePantry_PetFood: NeutzePantry_PetFood
   Neutze/NeutzePantry_Alerts: NeutzePantry_Alerts
 
 ignore:

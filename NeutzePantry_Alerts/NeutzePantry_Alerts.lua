@@ -12,7 +12,7 @@ local P = BF.Print
 -- ---------- settings ----------
 local DEFAULT_TARGET = {           -- by section kind, then by category key; 0 = no stock alert
   basic  = { hp=20, mp=20, food=20, drink=20, hppot=5, mppot=5, stone=1, gem=1, bandage=10 },
-  food   = 10, elixir = 5, flask = 2, ammo = 200, scroll = 0, rune = 0, juju = 0, protection = 0, weapon = 0,
+  food   = 10, elixir = 5, flask = 2, ammo = 200, petfood = 10, scroll = 0, rune = 0, juju = 0, protection = 0, weapon = 0,
 }
 local function DB()
   NeutzePantryCharDB = NeutzePantryCharDB or {}
