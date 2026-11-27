@@ -416,6 +416,8 @@ local function NewCanvas(frame)
   frame.content = content
   local sw = frame.scroll.GetWidth and frame.scroll:GetWidth()
   if type(sw) == "number" and sw > 200 then CONTENT_W = math.floor(sw) - 40 end
+  local fw = frame.GetWidth and frame:GetWidth()
+  if type(fw) == "number" and fw > 200 then frame.builtW = fw end
   content:SetSize(CONTENT_W + 32, 1)
   frame.scroll:SetScrollChild(content)
   usedHeight = 70
@@ -516,13 +518,36 @@ local function BuildSection(frame, sec)
   content:SetHeight(usedHeight + 40)
 end
 
+-- Pages build the first time they are shown. The options window can show a page before it has its final
+-- size (the scroll area is then 0 px and stays blank), and a Lua error mid-build used to leave a page empty
+-- for good. So: build one frame later, catch errors (report once, try again next time the page is shown),
+-- and rebuild when the page gets its real width.
 local built = {}            -- frame -> rebuild function, for pages that have been shown
+local function SafeBuild(frame, build)
+  local ok, err = pcall(build, frame)
+  if ok then
+    frame.built = true
+    built[frame] = function() SafeBuild(frame, build) end
+    if frame.scroll and frame.scroll.UpdateScrollChildRect then frame.scroll:UpdateScrollChildRect() end
+  else
+    frame.built = false
+    if not frame.reported then
+      frame.reported = true
+      print("|cff66ccffNeutze's Pantry|r: the page \"" .. tostring(frame.name) .. "\" could not be built: " .. tostring(err))
+    end
+  end
+end
 local function Lazy(frame, build)
   frame:SetScript("OnShow", function(self)
-    if self.built then return end
-    self.built = true
-    build(self)
-    built[self] = function() build(self) end
+    if self.built or self.pending then return end
+    self.pending = true
+    C_Timer.After(0, function() self.pending = false; SafeBuild(self, build) end)
+  end)
+  frame:SetScript("OnSizeChanged", function(self, w)
+    if self.built and type(w) == "number" and w > 200 and math.abs(w - (self.builtW or 0)) > 20 then
+      self.builtW = w
+      SafeBuild(self, build)
+    end
   end)
 end
 Lazy(panel, BuildMain)
