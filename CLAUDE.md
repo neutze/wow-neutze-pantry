@@ -37,6 +37,7 @@ There's no WoW in the sandbox. Use Python `lupa` (Lua 5.5) with mocked WoW APIs;
 - Root: `/Applications/World of Warcraft/_forever_/` (bridge: `~/mnt/World of Warcraft/_forever_/`). Add-ons go in `Interface/AddOns/`.
 - WTF: `WTF/Account/HIGHWAVE/macros-cache.txt` holds the General macros (IDs 0000…). `WTF/Account/HIGHWAVE/93/<Char>-Neutze/macros-cache.txt` holds character macros (IDs 0100…), in the format `VER 3 <16hex> "Name" "icon"\nbody\nEND`. Also `AddOns.txt` per character, `config-cache.wtf`, and `bindings-cache.wtf`.
 - **Edit WTF only while WoW is fully closed** (the game overwrites it on exit). Check that it's closed via the mtimes in `Logs/`. Back up first (`WTF-backup-<date>`).
+- After `device_commit_files`, check with `md5sum` on the device: a just-written staged file can be committed in its old version. Commit again if it differs.
 - New add-ons have to be added as `<Name>: enabled` to every character's `AddOns.txt` (23 character folders), or the owner enables them in game.
 - Macro limit: about 30 per character. Shared macros (Riding, Weapon Buff, etc.) live in the General tab.
 
