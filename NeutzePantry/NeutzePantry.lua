@@ -62,7 +62,8 @@ local function Match(sec, part, name, id, best)
           if num > e.v then e.id, e.v = id, num end
           if num < e.loV then e.loId, e.loV = id, num end
         end
-        return   -- an item counts for its first (most specific) category only
+        if not sec.multi then return end   -- usually: first (most specific) category only
+        break                               -- multi (Well Fed): e.g. Stamina AND Spirit food counts for both
       end
     end
   end
@@ -70,7 +71,7 @@ end
 
 function BF.Scan()
   local best = {}
-  for _, sec in ipairs(BF.sections) do best[sec.kind] = {} end
+  for _, sec in ipairs(BF.sections) do if sec.kind then best[sec.kind] = {} end end
   for bag = 0, 4 do
     for slot = 1, (GetNumSlots(bag) or 0) do
       local id = GetItemID(bag, slot)
@@ -80,7 +81,7 @@ function BF.Scan()
         local use = p and text:sub(p) or ""
         local deals = BF.has(use, "inflict", "damage to", "deals ")
         for _, sec in ipairs(BF.sections) do
-          local part = sec.classify(name, text, use, deals)
+          local part = sec.classify and sec.classify(name, text, use, deals)
           if part then Match(sec, part, name, id, best[sec.kind]); break end
         end
       end
@@ -105,7 +106,7 @@ function BF.Update()
   if InCombatLockdown() then return end
   local best = BF.Scan()
   for _, sec in ipairs(BF.sections) do
-    for _, c in ipairs(sec.cats) do
+    for _, c in ipairs(sec.cats or {}) do
       local idx = GetMacroIndexByName(c.macro)
       if idx and idx > 0 then
         local body = BodyFor(sec, c, best[sec.kind])
@@ -205,6 +206,34 @@ local function Section(sec, anchor, yOff)
   return last
 end
 
+-- A labelled text field with a status line and an optional button; used by Companion and Stable.
+function BF.FieldRow(parent, anchor, opts)
+  local label = parent:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+  label:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -6)
+  label:SetText(opts.label)
+  local box = CreateFrame("EditBox", nil, parent, "InputBoxTemplate")
+  box:SetSize(240, 22)
+  box:SetPoint("TOPLEFT", label, "BOTTOMLEFT", 6, -4)
+  box:SetAutoFocus(false)
+  local status = parent:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+  status:SetPoint("TOPLEFT", box, "BOTTOMLEFT", -6, -4)
+  status:SetWidth(CONTENT_W); status:SetJustifyH("LEFT")
+  local function apply(text) status:SetText(opts.set(text) or "") end
+  box:SetText(opts.get() or "")
+  box:SetScript("OnEnterPressed", function(b) apply(b:GetText()); b:ClearFocus() end)
+  box:SetScript("OnEditFocusLost", function(b) apply(b:GetText()) end)
+  box:SetScript("OnEscapePressed", function(b) b:SetText(opts.get() or ""); b:ClearFocus() end)
+  if opts.button then
+    local btn = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
+    btn:SetSize(140, 22)
+    btn:SetPoint("LEFT", box, "RIGHT", 8, 0)
+    btn:SetText(opts.button)
+    btn:SetScript("OnClick", function() local v = opts.current(); if v then box:SetText(v); apply(v) else status:SetText(opts.noCurrent or "") end end)
+  end
+  status:SetText(opts.status and opts.status() or "")
+  return status
+end
+
 function BF.AddHeight(px) usedHeight = usedHeight + px end
 
 panel:SetScript("OnShow", function(self)
@@ -237,8 +266,17 @@ panel:SetScript("OnShow", function(self)
     none:SetText("No Neutze's Pantry modules are enabled.")
   end
   for _, sec in ipairs(list) do
-    anchor = Section(sec, anchor, gap); gap = -14
-    if sec.extraUI then anchor = sec.extraUI(content, anchor) or anchor end
+    if sec.custom then                       -- e.g. Companion / Stable text fields
+      local h = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+      h:SetText(sec.title)
+      h:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, gap)
+      anchor = sec.custom(content, h) or h
+      usedHeight = usedHeight + 18 + (sec.height or 70) + 12
+    else
+      anchor = Section(sec, anchor, gap)
+      if sec.extraUI then anchor = sec.extraUI(content, anchor) or anchor end
+    end
+    gap = -14
   end
   content:SetHeight(usedHeight + 40)
 end)
@@ -258,14 +296,18 @@ SlashCmdList.NEUTZEPANTRY = function(msg)
     BF.Update()
     local best = BF.Scan()
     for _, sec in ipairs(BF.sections) do
-      print("|cff66ccffNeutze's Pantry|r — " .. sec.title .. ":")
-      for _, c in ipairs(sec.cats) do
+      if sec.cats then print("|cff66ccffNeutze's Pantry|r — " .. sec.title .. ":") end
+      for _, c in ipairs(sec.cats or {}) do
         local b = best[sec.kind][c.key]
         if b then print(string.format("  %s: %s (%d)", c.macro, (GetItemInfo(b.id)) or ("item "..b.id), b.v)) end
       end
     end
     return
   end
+  BF.Open()
+end
+
+function BF.Open()
   if category and Settings and Settings.OpenToCategory then Settings.OpenToCategory(category:GetID())
   elseif InterfaceOptionsFrame_OpenToCategory then InterfaceOptionsFrame_OpenToCategory(panel); InterfaceOptionsFrame_OpenToCategory(panel) end
 end

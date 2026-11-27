@@ -240,3 +240,23 @@ SlashCmdList.NEUTZECOMPANION = function(msg)
   if category and Settings and Settings.OpenToCategory then Settings.OpenToCategory(category:GetID())
   elseif InterfaceOptionsFrame_OpenToCategory then InterfaceOptionsFrame_OpenToCategory(panel); InterfaceOptionsFrame_OpenToCategory(panel) end
 end
+
+-- ---------- field at the end of the Neutze's Pantry panel ----------
+if NeutzePantry and NeutzePantry.RegisterSection and NeutzePantry.FieldRow then
+  local function StatusText()
+    local d = DB()
+    if not d.name or d.name == "" then return "No companion set for this character." end
+    local pet = FindPet(d.name)
+    return pet and ("|cff33ff33Found:|r " .. pet.name) or "|cffff5555Not found|r in your pet journal."
+  end
+  NeutzePantry.RegisterSection({ display = 90, order = 900, title = "Companion (Neutze's Companion)", height = 62,
+    custom = function(parent, anchor)
+      return NeutzePantry.FieldRow(parent, anchor, {
+        label = "Companion pet for this character - summoned again whenever no pet is out:",
+        get = function() return DB().name end,
+        set = function(text) SetPet(text); return StatusText() end,
+        status = StatusText,
+        button = "Use current pet", current = CurrentPetName, noCurrent = "Summon a pet first, then click this.",
+      })
+    end })
+end

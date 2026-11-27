@@ -6,7 +6,7 @@ Neutze's add-on suite for World of Warcraft: Forever. Every add-on folder in thi
 |---|---|
 | **Neutze's Pantry** (below) | v0.0.1 (coming) |
 | **Neutze's Companion** (below) | v0.0.1 (coming) |
-| Neutze's Stable (mount macro per character) | planned |
+| **Neutze's Stable** (below) | v0.0.1 (coming) |
 
 ## Neutze's Pantry
 
@@ -18,7 +18,7 @@ Type `/np` (or `/pantry`, `/neutze`), click a button to create its macro, drop i
 |---|---|
 | **Neutze's Pantry** (core) | The panel, bag scanning and macro updating. Required by all modules. |
 | **Neutze's Basics** | Buffet-style buttons: PantryHP (food out of combat; healthstone, then health potion in combat; Hearthstone if no food), PantryMP (drink; mana gem, then mana potion), food only, drink only, potions, healthstone, mana gem, bandage. |
-| **Neutze's Well Fed** | Buff food per stat (AutoStamina, AutoAgility, ...), AutoWellFed (best food of your top stat) and AutoFishing. When a stat runs out it falls back to your other Well Fed food, lowest leftover first, following your per-character stat priority. |
+| **Neutze's Well Fed** | Buff food per stat (AutoStamina, AutoAgility, ...), Mana/Health Regen, Hit, Crit, Fire Breath (Dragonbreath Chili), Speed, Armor; AutoWellFed (best food of your top stat) and AutoFishing. Pick your spec in the dropdown (e.g. Shaman: Elemental / Enhancement / Restoration) to set the stat priority. When a stat runs out it falls back to your other Well Fed food, lowest leftover first, following that per-character priority. |
 | **Neutze's Elixirs** | Elixirs per stat: ElixirAgility, ElixirFire, ElixirHealth, ... |
 | **Neutze's Flasks** | Flasks per stat: FlaskHealth, FlaskSpellPower, FlaskMana, ... |
 | **Neutze's Battle Potions** | Short combat potions: PotionRage, PotionFreeAction, PotionSpeed, ... |
@@ -34,10 +34,14 @@ Items are recognised from their tooltip text (English client), so new Forever re
 
 Type the companion pet you want on this character (`/nc`, or Options > AddOns > Neutze's Companion). Whenever you have no pet out, it is summoned again: after login, loading screens, landing, dismounting, reviving, eating. A pet you call by hand is left alone.
 Never in combat, while stealthed/invisible/feigning death, mounted, on a flight path, casting or eating. Options: put the pet away in stealth (on by default), pause in dungeons, raids and battlegrounds.
-Quick set: `/nc Mechanical Squirrel`. Turn off AutoCompanion if you use it, so the two don't fight.
+Quick set: `/nc Mechanical Squirrel`. Turn off AutoCompanion if you use it, so the two don't fight. With Neutze's Pantry installed, the field is also at the bottom of `/np`.
+
+## Neutze's Stable
+
+Type the mount for this character (bottom of `/np`, or `/stable Swift Palomino`). It writes a character macro **Mount**: mounts that mount, or dismounts if you're mounted. "Use current mount" takes the mount you're sitting on. Change the name and the macro updates.
 
 ### Install
-Download the release zip and put every `NeutzePantry*` and `NeutzeCompanion` folder into `World of Warcraft/_forever_/Interface/AddOns/`.
+Download the release zip and put every `NeutzePantry*`, `NeutzeCompanion` and `NeutzeStable` folder into `World of Warcraft/_forever_/Interface/AddOns/`.
 
 ## License
 MIT

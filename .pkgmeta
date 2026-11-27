@@ -10,6 +10,7 @@ move-folders:
   Neutze/NeutzePantry_Dynamite: NeutzePantry_Dynamite
   Neutze/NeutzePantry_Alchemy: NeutzePantry_Alchemy
   Neutze/NeutzeCompanion: NeutzeCompanion
+  Neutze/NeutzeStable: NeutzeStable
 
 ignore:
   - README.md
