@@ -4,6 +4,8 @@
 - New modules: Protection Potions, Scrolls, Juju & Zanza, Runes, Weapon Buffs (stones, oils, poisons; Auto picks by spec and weapon) and Ammunition (arrows or bullets for your ranged weapon).
 - Pantry is now the parent of the suite: Neutze's Companion, Stable and Macros require it and put their options pages under Neutze's Pantry (`NeutzePantry.AddSubPage`).
 - Macros also update when you change equipment.
+- New module **Neutze's Alerts**: pulsing macro button and chat reminder when Well Fed, an elixir or a flask is missing or running out; per-character "keep at least" stock targets with a steady border and coloured count on the button and a last-one warning; shopping list (`/np shop`); automatic vendor restock of N stacks of drinks, plain food and ammunition (Shift skips); low-ammo warning.
+- Core: bag scan now counts how many items each category holds; `/np <word>` commands and update hooks for modules.
 
 ## v0.0.1 — 2026-11-27
 First release of Neutze's Pantry for WoW Forever.

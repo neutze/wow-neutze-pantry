@@ -86,8 +86,7 @@ local function GetItemID(bag, slot)
   return GetContainerItemID and GetContainerItemID(bag, slot)
 end
 
-local function TooltipText(bag, slot)
-  tip:ClearLines(); tip:SetOwner(WorldFrame, "ANCHOR_NONE"); tip:SetBagItem(bag, slot)
+local function ReadTip()
   local first = _G["NeutzePantryScanTipTextLeft1"]
   local name = first and first:GetText() or ""
   local t = {}
@@ -98,6 +97,24 @@ local function TooltipText(bag, slot)
   end
   return name:lower(), table.concat(t, " ")
 end
+local function TooltipText(bag, slot)
+  tip:ClearLines(); tip:SetOwner(WorldFrame, "ANCHOR_NONE"); tip:SetBagItem(bag, slot)
+  return ReadTip()
+end
+-- Shared helpers for modules (Alerts): tooltip text of a bag slot or a vendor item, lowercased.
+BF.BagText = TooltipText
+function BF.MerchantText(i)
+  tip:ClearLines(); tip:SetOwner(WorldFrame, "ANCHOR_NONE"); tip:SetMerchantItem(i)
+  return ReadTip()
+end
+BF.GetItemID, BF.GetNumSlots = GetItemID, GetNumSlots
+function BF.SlotCount(bag, slot)
+  if C_Container and C_Container.GetContainerItemInfo then
+    local i = C_Container.GetContainerItemInfo(bag, slot); return i and i.stackCount or 0
+  end
+  local _, n = GetContainerItemInfo(bag, slot); return n or 0
+end
+function BF.Print(msg) print("|cff66ccffNeutze's Pantry|r: " .. msg) end
 
 local function Ignored(id)
   return BuffetDB and BuffetDB.ignoredItems and BuffetDB.ignoredItems[id]
@@ -111,15 +128,16 @@ local function Numbers(part)
   return first or 0, maxv
 end
 
-local function Match(sec, part, name, id, best)
+local function Match(sec, part, name, id, best, count)
   local first, maxv = Numbers(part)
   local num = sec.useMax and maxv or first
   for _, c in ipairs(sec.cats) do
     for _, w in ipairs(c.words) do
       if (c.byName and name:find(w, 1, true)) or part:find(w, 1, true) then
         local e = best[c.key]
-        if not e then best[c.key] = { id=id, v=num, loId=id, loV=num }
+        if not e then best[c.key] = { id=id, v=num, loId=id, loV=num, n=count }
         else
+          e.n = e.n + count                -- n: how many items of this category are in your bags
           if num > e.v then e.id, e.v = id, num end
           if num < e.loV then e.loId, e.loV = id, num end
         end
@@ -143,7 +161,7 @@ function BF.Scan()
         local deals = BF.has(use, "inflict", "damage to", "deals ")
         for _, sec in ipairs(BF.sections) do
           local part = sec.classify and sec.classify(name, text, use, deals)
-          if part then Match(sec, part, name, id, best[sec.kind]); break end
+          if part then Match(sec, part, name, id, best[sec.kind], BF.SlotCount(bag, slot)); break end
         end
       end
     end
@@ -176,7 +194,11 @@ function BF.Update()
       end
     end
   end
+  for _, f in ipairs(BF.onUpdate) do f(best) end
 end
+-- Modules can hook in: BF.onUpdate (called with the scan after macros are updated) and BF.commands (/np <word>).
+BF.onUpdate, BF.commands = BF.onUpdate or {}, BF.commands or {}
+BF.BodyFor = function(sec, c, best) return BodyFor(sec, c, best) end
 
 local pending = false
 local ev = CreateFrame("Frame")
@@ -418,6 +440,8 @@ SLASH_NEUTZEPANTRY1 = "/pantry"
 SLASH_NEUTZEPANTRY2 = "/np"
 SLASH_NEUTZEPANTRY3 = "/neutze"
 SlashCmdList.NEUTZEPANTRY = function(msg)
+  local word, rest = (msg or ""):lower():match("^%s*(%S*)%s*(.-)%s*$")
+  if word ~= "" and BF.commands[word] then BF.commands[word](rest); return end
   if msg and msg:lower():find("list") then
     BF.Update()
     local best = BF.Scan()

@@ -30,6 +30,7 @@ Type `/np` (or `/pantry`, `/neutze`), click a button to create its macro, drop i
 | **Neutze's Runes** | Demonic Rune / Dark Rune. |
 | **Neutze's Weapon Buffs** | Sharpening stones, weightstones, wizard and mana oils, rogue poisons. Left-click puts it on the main hand, right-click on the off hand. **Auto** picks by spec and weapon: casters get wizard oil (healers mana oil), everyone else a weightstone on maces and staves and a sharpening stone on edged weapons. |
 | **Neutze's Ammunition** | Loads your best arrows (bow, crossbow) or bullets (gun). |
+| **Neutze's Alerts** | Reminders. Your Pantry macro **pulses** when Well Fed, an elixir or a flask is missing or has under 2 minutes left (chat line out of combat; sound optional; quiet in cities). Every Pantry macro gets a per-character **keep at least** number: below it the button gets a steady border and a count (orange low, red empty, grey "alt" = fallback), with a chat warning on your last one. **Shopping list** in `/np` and `/np shop`. **Vendor restock**: keep 1, 2, 3 ... stacks of the best drink, plain food and ammunition (arrows or bullets for your weapon) the vendor sells; hold Shift when opening the vendor to skip. |
 
 Download the one release zip and turn modules on or off in the AddOns list. `/np list` prints what every macro would use.
 Respects Buffet's ignore list if you also run Buffet, but doesn't need it.
