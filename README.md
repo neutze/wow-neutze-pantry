@@ -36,6 +36,8 @@ Type the companion pet you want on this character (`/nc`, or Options > AddOns > 
 Never in combat, while stealthed/invisible/feigning death, mounted, on a flight path, casting or eating. Options: put the pet away in stealth (on by default), pause in dungeons, raids and battlegrounds.
 Quick set: `/nc Mechanical Squirrel`. Turn off AutoCompanion if you use it, so the two don't fight. With Neutze's Pantry installed, the field is also at the bottom of `/np`.
 
+![Companion and Mount fields at the bottom of /np](screenshots/companion-stable.png)
+
 ## Neutze's Stable
 
 Type the mount for this character (bottom of `/np`, or `/stable Swift Palomino`). It writes a character macro **Mount**: mounts that mount, or dismounts if you're mounted. "Use current mount" takes the mount you're sitting on. Change the name and the macro updates.

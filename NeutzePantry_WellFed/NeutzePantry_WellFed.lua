@@ -60,7 +60,10 @@ local function Priority()
     for _, k in ipairs(ALL) do if not seen[k] then list[#list+1] = k end end
     NeutzePantryCharDB.priority = list
   end
-  return NeutzePantryCharDB.priority
+  local list, seen = NeutzePantryCharDB.priority, {}
+  for _, k in ipairs(list) do seen[k] = true end
+  for _, k in ipairs(ALL) do if not seen[k] then list[#list+1] = k end end   -- stats added in newer versions
+  return list
 end
 
 -- Replace the priority with a spec preset (preset stats first, every other stat after).
@@ -104,7 +107,7 @@ BF.RegisterSection({ display=2, kind="food", title="Well Fed food", noun="food",
     sl:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -12)
     sl:SetText("Spec:")
     local row, dd = {}, nil
-    local function specName() return (NeutzePantryCharDB and NeutzePantryCharDB.spec) or (specs[1] and specs[1][1]) or "-" end
+    local function specName() return (NeutzePantryCharDB and NeutzePantryCharDB.spec) or "Choose spec" end
     local function refresh()
       for i, k in ipairs(Priority()) do row[i]:SetText(i .. ". " .. LABEL[k]); row[i].key = k end
       if dd then
@@ -141,7 +144,7 @@ BF.RegisterSection({ display=2, kind="food", title="Well Fed food", noun="food",
       b:SetScript("OnClick", function(self)
         local p = Priority()
         for j, k in ipairs(p) do
-          if k == self.key and j > 1 then p[j], p[j-1] = p[j-1], p[j]; break end
+          if k == self.key and j > 1 then p[j], p[j-1] = p[j-1], p[j]; NeutzePantryCharDB.spec = "Custom"; break end
         end
         refresh(); BF.Update()
       end)
