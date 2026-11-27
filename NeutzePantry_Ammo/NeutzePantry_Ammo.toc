@@ -1,0 +1,12 @@
+## Interface: 16001, 11509
+## Title: Neutze's Ammunition
+## Notes: Best arrows or bullets for the ranged weapon you have equipped (PantryAmmo). Part of Neutze's Pantry (needs the core). /np
+## Author: Johannes (written with Claude)
+## Version: 0.0.1
+## IconTexture: Interface\Icons\INV_Ammo_Arrow_02
+## Category: Bags & Inventory
+## Group: Neutze's
+## Dependencies: NeutzePantry
+## X-Part-Of: Neutze's Pantry
+
+NeutzePantry_Ammo.lua

@@ -9,6 +9,12 @@ move-folders:
   Neutze/NeutzePantry_Potions: NeutzePantry_Potions
   Neutze/NeutzePantry_Dynamite: NeutzePantry_Dynamite
   Neutze/NeutzePantry_Alchemy: NeutzePantry_Alchemy
+  Neutze/NeutzePantry_Protection: NeutzePantry_Protection
+  Neutze/NeutzePantry_Scrolls: NeutzePantry_Scrolls
+  Neutze/NeutzePantry_Juju: NeutzePantry_Juju
+  Neutze/NeutzePantry_Runes: NeutzePantry_Runes
+  Neutze/NeutzePantry_WeaponBuffs: NeutzePantry_WeaponBuffs
+  Neutze/NeutzePantry_Ammo: NeutzePantry_Ammo
 
 ignore:
   - README.md

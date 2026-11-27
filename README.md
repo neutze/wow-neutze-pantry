@@ -24,6 +24,12 @@ Type `/np` (or `/pantry`, `/neutze`), click a button to create its macro, drop i
 | **Neutze's Battle Potions** | Short combat potions: PotionRage, PotionFreeAction, PotionSpeed, ... |
 | **Neutze's Dynamite** | Engineering explosives: Dynamite, Grenade (stun bombs), Bomb — highest tier first. |
 | **Neutze's Alchemy Bombs** | Your strongest alchemy damage item. |
+| **Neutze's Protection Potions** | Fire, Frost, Nature, Shadow, Arcane and Holy Protection, Greater first. |
+| **Neutze's Scrolls** | Scroll of Agility, Strength, Stamina, Intellect, Spirit and Protection, sorted for your spec. |
+| **Neutze's Juju & Zanza** | Juju, Zanza, the Blasted Lands buffs (R.O.I.D.S., Scorpok, ...) and Winterfall Firewater per stat, sorted for your spec. |
+| **Neutze's Runes** | Demonic Rune / Dark Rune. |
+| **Neutze's Weapon Buffs** | Sharpening stones, weightstones, wizard and mana oils, rogue poisons. Left-click puts it on the main hand, right-click on the off hand. **Auto** picks by spec and weapon: casters get wizard oil (healers mana oil), everyone else a weightstone on maces and staves and a sharpening stone on edged weapons. |
+| **Neutze's Ammunition** | Loads your best arrows (bow, crossbow) or bullets (gun). |
 
 Download the one release zip and turn modules on or off in the AddOns list. `/np list` prints what every macro would use.
 Respects Buffet's ignore list if you also run Buffet, but doesn't need it.
@@ -35,8 +41,10 @@ Items are recognised from their tooltip text (English client), so new Forever re
 ![Flasks, combat potions, explosives and alchemy items](screenshots/potions-explosives.png)
 
 ## More from Neutze's
-- [Neutze's Companion](https://github.com/neutze/wow-neutze-companion): one pet per character, always out. Its field shows at the bottom of `/np`.
-- [Neutze's Stable](https://github.com/neutze/wow-neutze-stable): one mount per character, on a Mount macro. Its field shows at the bottom of `/np`.
+Pantry is the parent of the suite: these need it installed, and their options pages sit under Neutze's Pantry.
+
+- [Neutze's Companion](https://github.com/neutze/wow-neutze-companion): one pet per character, always out. Its field also shows at the bottom of `/np`.
+- [Neutze's Stable](https://github.com/neutze/wow-neutze-stable): one mount per character, on a Mount macro. Its field also shows at the bottom of `/np`.
 - [Neutze's Macros](https://github.com/neutze/wow-neutze-macros): pick class and spec, click a spell to get its macro.
 
 ## Install

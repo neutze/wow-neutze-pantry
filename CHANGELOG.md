@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+- New modules: Protection Potions, Scrolls, Juju & Zanza, Runes, Weapon Buffs (stones, oils, poisons; Auto picks by spec and weapon) and Ammunition (arrows or bullets for your ranged weapon).
+- Pantry is now the parent of the suite: Neutze's Companion, Stable and Macros require it and put their options pages under Neutze's Pantry (`NeutzePantry.AddSubPage`).
+- Macros also update when you change equipment.
+
 ## v0.0.1 — 2026-11-27
 First release of Neutze's Pantry for WoW Forever.
 - Panel: /np, /pantry or /neutze. Click a button to create its macro (General tab) and pick it up; only macros you create are kept up to date. Scrollable, sections in a fixed order.
