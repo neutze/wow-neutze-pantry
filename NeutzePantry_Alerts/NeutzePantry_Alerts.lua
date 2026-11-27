@@ -203,7 +203,9 @@ local function Learn(scan)
     known[kind] = known[kind] or {}
     for _, e in pairs(scan[kind] or {}) do
       for _, id in ipairs({ e.id, e.loId }) do
-        local sname, sid = GetItemSpell(id)
+        local GIS = GetItemSpell or (C_Item and C_Item.GetItemSpell)
+        local sname, sid = nil, nil
+        if GIS then sname, sid = GIS(id) end
         if sid then known[kind][sid] = true end
         if sname then known[kind][sname] = true end
       end
@@ -267,7 +269,7 @@ local AMMO_FOR = { [2] = 2, [18] = 2, [3] = 3 }   -- weapon subclass (bow, cross
 local function AmmoKind()
   local id = GetInventoryItemID("player", 18)
   if not id then return end
-  local _, _, _, _, _, classID, sub = GetItemInfoInstant(id)
+  local classID, sub = BF.ItemClass(id)
   return classID == 2 and AMMO_FOR[sub] or nil
 end
 A.AmmoKind = AmmoKind
@@ -278,7 +280,7 @@ local function Value(use) local m = 0; for s in (use:gsub(",", "")):gmatch("(%d+
 
 -- What a vendor/bag item is: "drink", "food", "ammo" (plus its strength) or nil.
 local function Kind(name, text, id)
-  local _, _, _, _, _, classID, sub = GetItemInfoInstant(id)
+  local classID, sub = BF.ItemClass(id)
   if classID == 6 then
     local dps = tonumber(text:match("([%d%.]+) damage per second")) or 0
     return "ammo", dps, sub
@@ -322,6 +324,9 @@ local buying = false
 local function Restock()
   local d = DB()
   if buying or IsShiftKeyDown() or InCombatLockdown() then return end
+  local on = false
+  for _, r in pairs(d.restock) do if r.on then on = true end end
+  if not on then return end                          -- nothing to restock: don't even look at the vendor
   local level, ammoSub = UnitLevel("player"), AmmoKind()
   local pick = {}                                    -- kind -> best vendor item
   for i = 1, (GetMerchantNumItems() or 0) do

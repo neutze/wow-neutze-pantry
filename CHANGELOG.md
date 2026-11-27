@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Fixed a Lua error at every vendor ("attempt to call a nil value", Alerts line 270). The Forever client has no global GetItemInfoInstant, so Pantry now uses its own helper (BF.ItemClass) with C_Item and GetItemInfo as fallbacks. Vendor restock also skips the vendor entirely when every restock option is off.
 - Options pages no longer stay blank sometimes. They build one frame after they open, rebuild when they get their real width, and if a page fails to build, the error is printed in chat and it tries again the next time you open it.
 - Options: every enabled module has its own page under Neutze's Pantry (Basics, Well Fed, Elixirs, ..., Alerts), followed by Companion, Stable and Macros. The first page only holds the spec picker and your role (Tank, Healer or Damage, from the spec). Disabled modules have no page.
 - Alerts: the stock grid, the shopping list and the sections after them start at the left edge again. They had been anchored under the last vendor checkbox and ran off the panel. The shopping list no longer shows negative amounts: a macro running on a fallback counts 0 of its own item and says what it uses in the meantime.
