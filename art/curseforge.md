@@ -1,7 +1,7 @@
 # CurseForge project page (copy & paste)
 
 **Name:** Neutze's
-**Summary (short):** One macro button per job: best food, buff food by stat, elixirs, flasks, potions, explosives, plus a per-character companion and mount. For WoW: Forever.
+**Summary (short):** One macro button per job: best food, buff food by stat, elixirs, flasks, potions, explosives, sorted best-first for your class and spec. For WoW: Forever.
 **Game version:** World of Warcraft: Forever (Classic Era 1.15 / interface 11509 if Forever isn't listed)
 **Categories:** Bags & Inventory (main), Buffs & Debuffs, Collections
 **License:** MIT
@@ -24,11 +24,8 @@ Open the panel, click a button to create its macro and drag it to your bar. Each
 
 Every module is its own add-on, so turn off what you don't need. If Buffet is installed, its ignore list is respected.
 
-### Neutze's Companion (`/nc`)
-Type the pet you want on this character. It's summoned again whenever no pet is out, but never in combat, in stealth, while mounted, or while eating. You also get a **Companion** macro with the pet's icon.
-
-### Neutze's Stable (`/stable`)
-Type the mount for this character. It writes a **Mount** macro that mounts that mount, or dismounts you.
+### More from Neutze's
+Neutze's Companion (one pet per character) and Neutze's Stable (one mount per character) are separate add-ons; when installed, their fields show at the bottom of `/np`.
 
 ### Notes
 - English game client only: items are recognised by their tooltip text, so new Forever recipes work without an item list.

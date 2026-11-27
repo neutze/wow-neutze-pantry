@@ -2,13 +2,11 @@
 
 # wow-neutze-pantry
 
-Neutze's add-on suite for World of Warcraft: Forever. Every add-on folder in this repo is one add-on; copy the ones you want into `World of Warcraft/_forever_/Interface/AddOns/`.
+Neutze's Pantry for World of Warcraft: Forever: one core plus modules, each its own add-on. Copy the folders into `World of Warcraft/_forever_/Interface/AddOns/`.
 
 | Suite | Status |
 |---|---|
 | **Neutze's Pantry** (below) | v0.0.1 |
-| **Neutze's Companion** (below) | v0.0.1 |
-| **Neutze's Stable** (below) | v0.0.1 |
 
 ## Neutze's Pantry
 
@@ -36,22 +34,15 @@ Items are recognised from their tooltip text (English client), so new Forever re
 
 ![Flasks, combat potions, explosives and alchemy items](screenshots/potions-explosives.png)
 
-## Neutze's Companion
-
-Type the companion pet you want on this character (`/nc`, or Options > AddOns > Neutze's Companion). Whenever you have no pet out, it is summoned again: after login, loading screens, landing, dismounting, reviving, eating. A pet you call by hand is left alone.
-Never in combat, while stealthed/invisible/feigning death, mounted, on a flight path, casting or eating. Options: put the pet away in stealth (on by default), pause in dungeons, raids and battlegrounds.
-It also writes a character macro **Companion** with the pet's icon, so you can put it on your bar and call the pet by hand. Quick set: `/nc Mechanical Squirrel`. Turn off AutoCompanion if you use it, so the two don't fight. With Neutze's Pantry installed, the field is also at the bottom of `/np`.
-
-![Companion and Mount fields at the bottom of /np](screenshots/companion-stable.png)
-
-## Neutze's Stable
-
-Type the mount for this character (bottom of `/np`, or `/stable Swift Palomino`). It writes a character macro **Mount**: mounts that mount, or dismounts if you're mounted. "Use current mount" takes the mount you're sitting on. Change the name and the macro updates.
+## More from Neutze's
+- [Neutze's Companion](https://github.com/neutze/wow-neutze-companion): one pet per character, always out. Its field shows at the bottom of `/np`.
+- [Neutze's Stable](https://github.com/neutze/wow-neutze-stable): one mount per character, on a Mount macro. Its field shows at the bottom of `/np`.
+- [Neutze's Macros](https://github.com/neutze/wow-neutze-macros): pick class and spec, click a spell to get its macro.
 
 ## Install
 With the CurseForge app: search for **Neutze's** and install it for World of Warcraft: Forever.
 
-By hand: download `Neutze-v0.0.1.zip` from [Releases](https://github.com/neutze/wow-neutze-pantry/releases) and put every `NeutzePantry*`, `NeutzeCompanion` and `NeutzeStable` folder into `World of Warcraft/_forever_/Interface/AddOns/`. Turn off the modules you don't want in the AddOns list.
+By hand: download `Neutze-v0.0.1.zip` from [Releases](https://github.com/neutze/wow-neutze-pantry/releases) and put every `NeutzePantry*` folder into `World of Warcraft/_forever_/Interface/AddOns/`. Turn off the modules you don't want in the AddOns list.
 
 ## Known limits
 - English game client only: items are recognised by their tooltip text.
