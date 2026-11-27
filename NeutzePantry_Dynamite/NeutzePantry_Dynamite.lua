@@ -4,7 +4,7 @@ BF.RegisterSection({ display=6, kind="explosive", title="Engineering explosives"
     if deals and BF.has(name, "dynamite", "bomb", "grenade", "sapper", "explosive", "land mine", "charge") then return use end
   end,
   cats = {
-    { key="grenade",  macro="Grenade",  label="Stun bomb", words={"stun"} },
-    { key="dynamite", macro="Dynamite", label="Dynamite",       words={"dynamite"}, byName=true },
-    { key="bomb",     macro="Bomb",     label="Bomb / other",   words={"damage"} },
+    { key="grenade",  macro="NPexStun", old="Grenade",  label="Stun bomb", words={"stun"} },
+    { key="dynamite", macro="NPexDyn", old="Dynamite", label="Dynamite",       words={"dynamite"}, byName=true },
+    { key="bomb",     macro="NPexBomb", old="Bomb",     label="Bomb / other",   words={"damage"} },
   }})

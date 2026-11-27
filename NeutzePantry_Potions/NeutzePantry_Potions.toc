@@ -1,6 +1,6 @@
 ## Interface: 16001, 11509
 ## Title: Neutze's Battle Potions
-## Notes: Short combat potion buttons (PotionRage, PotionFreeAction, ...). Part of Neutze's Pantry (needs the core). /pantry
+## Notes: Short combat potion buttons (NPpoRage, NPpoFree, ...). Part of Neutze's Pantry (needs the core). /pantry
 ## Author: Johannes (written with Claude)
 ## Version: 0.0.1
 ## IconTexture: Interface\Icons\INV_Potion_54

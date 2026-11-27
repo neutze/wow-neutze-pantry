@@ -2,28 +2,28 @@
 -- Every stat macro eats your best food for that stat. If you have none, it eats another Well Fed food
 -- (Forever: every Well Fed food also gives +5% kill XP): it walks your stat priority and takes the
 -- LOWEST food of the first stat you carry, so leftovers get used up and good food is kept.
--- AutoWellFed: one button that eats the best food of your top stat. Fishing food is always last.
+-- NPwfBest ("Best for my spec"): one button that eats the best food of your top stat. Fishing food is always last.
 local BF = NeutzePantry
 local FED = {"well fed", "also increase", "nutritious"}
 
 local CATS = {
-  { key="any",   macro="AutoWellFed",    label="Best for my spec", tip="Eats the best food for your class and spec (the Spec dropdown below): your top stat first, then down the list.", words={"pool:never"} },
-  { key="fish",  macro="AutoFishing",    label="Fishing",      words={"fishing"} },
-  { key="ap",    macro="AutoAP",         label="Attack Power", words={"attack power"} },
-  { key="heal",  macro="AutoHealing",    label="Healing",      words=BF.HEAL_WORDS },
-  { key="sp",    macro="AutoSpellPower", label="Spell Power",  words=BF.SP_WORDS },
-  { key="mp5",   macro="AutoMP5",        label="Mana Regen",   words={"mana every 5", "mana per 5"} },
-  { key="hp5",   macro="AutoHP5",        label="Health Regen", words={"health every 5", "health per 5"} },
-  { key="hit",   macro="AutoHit",        label="Hit",          words={"hit rating", "chance to hit"} },
-  { key="crit",  macro="AutoCrit",       label="Crit",         words={"critical strike"} },
-  { key="breath",macro="AutoFireBreath", label="Fire Breath",  tip="Dragonbreath Chili and similar damage-proc food.", words={"belch"} },
-  { key="speed", macro="AutoSpeed",      label="Speed",        words={"movement speed", "run speed"} },
-  { key="armor", macro="AutoArmor",      label="Armor",        words={"armor"} },
-  { key="str",   macro="AutoStrength",   label="Strength",     words={"strength"} },
-  { key="agi",   macro="AutoAgility",    label="Agility",      words={"agility"} },
-  { key="int",   macro="AutoIntellect",  label="Intellect",    words={"intellect"} },
-  { key="sta",   macro="AutoStamina",    label="Stamina",      words={"stamina"} },
-  { key="spi",   macro="AutoSpirit",     label="Spirit",       words={"spirit"} },
+  { key="any",   macro="NPwfBest", old="AutoWellFed",    label="Best for my spec", tip="Eats the best food for your class and spec (the Spec dropdown below): your top stat first, then down the list.", words={"pool:never"} },
+  { key="fish",  macro="NPwfFish", old="AutoFishing",    label="Fishing",      words={"fishing"} },
+  { key="ap",    macro="NPwfAP", old="AutoAP",         label="Attack Power", words={"attack power"} },
+  { key="heal",  macro="NPwfHeal", old="AutoHealing",    label="Healing",      words=BF.HEAL_WORDS },
+  { key="sp",    macro="NPwfSP", old="AutoSpellPower", label="Spell Power",  words=BF.SP_WORDS },
+  { key="mp5",   macro="NPwfMP5", old="AutoMP5",        label="Mana Regen",   words={"mana every 5", "mana per 5"} },
+  { key="hp5",   macro="NPwfHP5", old="AutoHP5",        label="Health Regen", words={"health every 5", "health per 5"} },
+  { key="hit",   macro="NPwfHit", old="AutoHit",        label="Hit",          words={"hit rating", "chance to hit"} },
+  { key="crit",  macro="NPwfCrit", old="AutoCrit",       label="Crit",         words={"critical strike"} },
+  { key="breath",macro="NPwfBreath", old="AutoFireBreath", label="Fire Breath",  tip="Dragonbreath Chili and similar damage-proc food.", words={"belch"} },
+  { key="speed", macro="NPwfSpeed", old="AutoSpeed",      label="Speed",        words={"movement speed", "run speed"} },
+  { key="armor", macro="NPwfArmor", old="AutoArmor",      label="Armor",        words={"armor"} },
+  { key="str",   macro="NPwfStr", old="AutoStrength",   label="Strength",     words={"strength"} },
+  { key="agi",   macro="NPwfAgi", old="AutoAgility",    label="Agility",      words={"agility"} },
+  { key="int",   macro="NPwfInt", old="AutoIntellect",  label="Intellect",    words={"intellect"} },
+  { key="sta",   macro="NPwfSta", old="AutoStamina",    label="Stamina",      words={"stamina"} },
+  { key="spi",   macro="NPwfSpi", old="AutoSpirit",     label="Spirit",       words={"spirit"} },
 }
 local LABEL = {}; for _, c in ipairs(CATS) do LABEL[c.key] = c.label end
 

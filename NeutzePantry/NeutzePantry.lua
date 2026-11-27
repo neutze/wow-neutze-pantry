@@ -180,9 +180,73 @@ local function BodyFor(sec, c, best)
            or ("#showtooltip\n/run print(\"|cff66ccffNeutze's Pantry|r: no " .. c.label .. " " .. sec.noun .. " in your bags\")")
 end
 
+-- Macro names are NP + module code + item (NPwfAP = Well Fed, Attack Power), so they sort by module.
+-- Cats carry their pre-0.0.2 name in c.old (PantryHP, AutoAP, ...): a Pantry macro still under that name is
+-- renamed in place (it stays on your bars); if both names exist, the old one is deleted.
+-- Renames macro `old` to `new` when `old` exists on the right tab (General, or this character's tab when
+-- perCharacter) and isOurs(body) says we wrote it. If `new` already exists, the old copy is deleted instead.
+function BF.RenameMacro(old, new, isOurs, perCharacter)
+  local oi = GetMacroIndexByName(old)
+  if not oi or oi == 0 then return end
+  local isChar = oi > (MAX_ACCOUNT_MACROS or 120)
+  if isChar ~= (perCharacter and true or false) then return end
+  local _, icon, body = GetMacroInfo(oi)
+  if not body or not isOurs(body) then return end
+  local ni = GetMacroIndexByName(new)
+  if ni and ni > 0 then DeleteMacro(oi) else EditMacro(oi, new, icon, body) end
+end
+local function IsPantryBody(body) return body:find("item:%d") or body:find("Neutze's Pantry", 1, true) end
+local function MigrateNames()
+  local alerts = NeutzePantryCharDB and NeutzePantryCharDB.alerts
+  for _, sec in ipairs(BF.sections) do
+    for _, c in ipairs(sec.cats or {}) do
+      if c.old then
+        BF.RenameMacro(c.old, c.macro, IsPantryBody)
+        if alerts then                                                  -- Alerts settings are keyed by macro name
+          for _, t in ipairs({ alerts.targets or {}, alerts.last or {} }) do
+            if t[c.old] ~= nil and t[c.macro] == nil then t[c.macro], t[c.old] = t[c.old], nil end
+          end
+        end
+      end
+    end
+  end
+end
+-- Older names from before the Pantry modules (the Autopilot era) that have no NP equivalent to rename to.
+-- They are deleted, but only from the General tab and only if the macro is nothing but #showtooltip,
+-- /use and /run print lines, so a hand-written macro that happens to share a name is left alone.
+BF.LEGACY = { "FoodAuto", "DrinkAuto", "HealthAuto", "ManaAuto", "BandageAuto", "BuffAuto",
+              "Food+", "Drink+", "HP+", "MP+", "Bandage+", "Buff+" }
+local function IsItemOnlyBody(body)
+  local any = false
+  for line in body:gmatch("[^\n]+") do
+    line = line:gsub("^%s+", "")
+    if line ~= "" then
+      if not (line:find("^#show") or line:find("^/use ") or line:find("^/run print%(")) then return false end
+      any = true
+    end
+  end
+  return any
+end
+local function CleanLegacy()
+  for _, name in ipairs(BF.LEGACY) do
+    local i = GetMacroIndexByName(name)
+    if i and i > 0 and i <= (MAX_ACCOUNT_MACROS or 120) then
+      local _, _, body = GetMacroInfo(i)
+      if body and IsItemOnlyBody(body) then DeleteMacro(i) end
+    end
+  end
+end
+local migrated = false
+local function MigrateAll()
+  MigrateNames()                    -- cheap, and catches macros made on another character later
+  if not migrated then migrated = true; CleanLegacy() end
+end
+BF.MigrateNames = MigrateAll
+
 -- Like Buffet: only macros you created (from the panel) are kept up to date.
 function BF.Update()
   if InCombatLockdown() then return end
+  MigrateAll()
   local best = BF.Scan()
   for _, sec in ipairs(BF.sections) do
     for _, c in ipairs(sec.cats or {}) do

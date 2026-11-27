@@ -10,12 +10,12 @@ BF.RegisterSection({ sortBySpec=true, display=4.5, kind="juju", title="Juju, Zan
     return b and ("#showtooltip\n/use [@player] item:" .. b.id)   -- Juju is used on a target: always you
   end,
   cats = {
-    { key="str",   macro="JujuStrength",  label="Strength",     words={"strength"} },
-    { key="agi",   macro="JujuAgility",   label="Agility",      words={"agility"} },
-    { key="ap",    macro="JujuAP",        label="Attack Power", words={"attack power"} },
-    { key="haste", macro="JujuHaste",     label="Attack Speed", words={"attack speed"} },
-    { key="sta",   macro="JujuStamina",   label="Stamina",      words={"stamina"} },
-    { key="int",   macro="JujuIntellect", label="Intellect",    words={"intellect"} },
-    { key="spi",   macro="JujuSpirit",    label="Spirit",       words={"spirit"} },
-    { key="speed", macro="JujuSpeed",     label="Speed",        words={"movement speed", "run speed"} },
+    { key="str",   macro="NPjuStr", old="JujuStrength",  label="Strength",     words={"strength"} },
+    { key="agi",   macro="NPjuAgi", old="JujuAgility",   label="Agility",      words={"agility"} },
+    { key="ap",    macro="NPjuAP", old="JujuAP",        label="Attack Power", words={"attack power"} },
+    { key="haste", macro="NPjuHaste", old="JujuHaste",     label="Attack Speed", words={"attack speed"} },
+    { key="sta",   macro="NPjuSta", old="JujuStamina",   label="Stamina",      words={"stamina"} },
+    { key="int",   macro="NPjuInt", old="JujuIntellect", label="Intellect",    words={"intellect"} },
+    { key="spi",   macro="NPjuSpi", old="JujuSpirit",    label="Spirit",       words={"spirit"} },
+    { key="speed", macro="NPjuSpeed", old="JujuSpeed",     label="Speed",        words={"movement speed", "run speed"} },
   }})

@@ -17,12 +17,12 @@ Type `/np` (or `/pantry`, `/neutze`), click a button to create its macro, drop i
 | Add-on | What you get |
 |---|---|
 | **Neutze's Pantry** (core) | The panel, bag scanning and macro updating. Required by all modules. |
-| **Neutze's Basics** | Buffet-style buttons: PantryHP (food out of combat; healthstone, then health potion in combat; Hearthstone if no food), PantryMP (drink; mana gem, then mana potion), food only, drink only, potions, healthstone, mana gem, bandage. |
-| **Neutze's Well Fed** | Buff food per stat (AutoStamina, AutoAgility, ...), Mana/Health Regen, Hit, Crit, Fire Breath (Dragonbreath Chili), Speed, Armor; AutoWellFed ("Best for my spec": the best food for your class and spec) and AutoFishing. Pick your class spec in `/np` (right under the Basics) (e.g. Shaman: Elemental / Enhancement / Restoration): food, elixir, flask and potion buttons are then sorted best-first for that spec, and "Best for my spec" eats the right food. When a stat runs out it falls back to your other Well Fed food, lowest leftover first, following that per-character priority. |
-| **Neutze's Elixirs** | Elixirs per stat: ElixirAgility, ElixirFire, ElixirHealth, ... |
-| **Neutze's Flasks** | Flasks per stat: FlaskHealth, FlaskSpellPower, FlaskMana, ... |
-| **Neutze's Battle Potions** | Short combat potions: PotionRage, PotionFreeAction, PotionSpeed, ... |
-| **Neutze's Dynamite** | Engineering explosives: Dynamite, Grenade (stun bombs), Bomb — highest tier first. |
+| **Neutze's Basics** | Buffet-style buttons: NPbaHP (food out of combat; healthstone, then health potion in combat; Hearthstone if no food), NPbaMP (drink; mana gem, then mana potion), food only, drink only, potions, healthstone, mana gem, bandage. |
+| **Neutze's Well Fed** | Buff food per stat (NPwfSta, NPwfAgi, ...), Mana/Health Regen, Hit, Crit, Fire Breath (Dragonbreath Chili), Speed, Armor; NPwfBest ("Best for my spec": the best food for your class and spec) and NPwfFish. Pick your class spec in `/np` (right under the Basics) (e.g. Shaman: Elemental / Enhancement / Restoration): food, elixir, flask and potion buttons are then sorted best-first for that spec, and "Best for my spec" eats the right food. When a stat runs out it falls back to your other Well Fed food, lowest leftover first, following that per-character priority. |
+| **Neutze's Elixirs** | Elixirs per stat: NPelAgi, NPelFire, NPelHP, ... |
+| **Neutze's Flasks** | Flasks per stat: NPflHP, NPflSP, NPflMana, ... |
+| **Neutze's Battle Potions** | Short combat potions: NPpoRage, NPpoFree, NPpoSpeed, ... |
+| **Neutze's Dynamite** | Engineering explosives: NPexDyn, NPexStun (stun bombs), NPexBomb — highest tier first. |
 | **Neutze's Alchemy Bombs** | Your strongest alchemy damage item. |
 | **Neutze's Protection Potions** | Fire, Frost, Nature, Shadow, Arcane and Holy Protection, Greater first. |
 | **Neutze's Scrolls** | Scroll of Agility, Strength, Stamina, Intellect, Spirit and Protection, sorted for your spec. |
@@ -31,6 +31,8 @@ Type `/np` (or `/pantry`, `/neutze`), click a button to create its macro, drop i
 | **Neutze's Weapon Buffs** | Sharpening stones, weightstones, wizard and mana oils, rogue poisons. Left-click puts it on the main hand, right-click on the off hand. **Auto** picks by spec and weapon: casters get wizard oil (healers mana oil), everyone else a weightstone on maces and staves and a sharpening stone on edged weapons. |
 | **Neutze's Ammunition** | Loads your best arrows (bow, crossbow) or bullets (gun). |
 | **Neutze's Alerts** | Reminders. Your Pantry macro **pulses** when Well Fed, an elixir or a flask is missing or has under 2 minutes left (chat line out of combat; sound optional; quiet in cities). Every Pantry macro gets a per-character **keep at least** number: below it the button gets a steady border and a count (orange low, red empty, grey "alt" = fallback), with a chat warning on your last one. **Shopping list** in `/np` and `/np shop`. **Vendor restock**: keep 1, 2, 3 ... stacks of the best drink, plain food and ammunition (arrows or bullets for your weapon) the vendor sells; hold Shift when opening the vendor to skip. |
+
+**Macro names** all start with NP and a two-letter module code, so they sort by module in your General tab: ba Basics, wf Well Fed, el Elixirs, fl Flasks, po Battle Potions, pr Protection, sc Scrolls, ju Juju & Zanza, ru Runes, wb Weapon Buffs, am Ammunition, ex Explosives, al Alchemy (Companion: NPcoPet, Stable: NPstMount). Macros from before v0.0.2 (PantryHP, AutoAP, ElixirAgility, ...) are renamed automatically the first time you log in, and they stay on your bars.
 
 Download the one release zip and turn modules on or off in the AddOns list. `/np list` prints what every macro would use.
 Respects Buffet's ignore list if you also run Buffet, but doesn't need it.

@@ -4,5 +4,5 @@ BF.RegisterSection({ display=7, kind="alchdmg", title="Alchemy damage items", no
     if deals and BF.has(name, "flask", "oil of", "alchemist", "vial", "concoction") then return use end
   end,
   cats = {
-    { key="dmg", macro="AlchemyDamage", label="Alchemy Damage", words={"damage"} },
+    { key="dmg", macro="NPalDmg", old="AlchemyDamage", label="Alchemy Damage", words={"damage"} },
   }})

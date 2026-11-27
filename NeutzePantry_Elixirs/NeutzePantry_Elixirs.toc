@@ -1,6 +1,6 @@
 ## Interface: 16001, 11509
 ## Title: Neutze's Elixirs
-## Notes: Elixir buttons per stat (ElixirAgility, ElixirFire, ...). Part of Neutze's Pantry (needs the core). /pantry
+## Notes: Elixir buttons per stat (NPelAgi, NPelFire, ...). Part of Neutze's Pantry (needs the core). /pantry
 ## Author: Johannes (written with Claude)
 ## Version: 0.0.1
 ## IconTexture: Interface\Icons\INV_Potion_32
