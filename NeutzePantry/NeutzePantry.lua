@@ -9,6 +9,65 @@ BF.HEAL_WORDS = {"healing done", "healing by", "healing spells"}
 
 function BF.has(s, ...) for _, w in ipairs({...}) do if s:find(w, 1, true) then return true end end end
 
+-- ---------- class / spec: one stat priority per character, shared by all modules ----------
+local DEFAULTS = {
+  WARRIOR = {"str","sta","ap","agi","armor"},  ROGUE  = {"agi","ap","str","sta"},
+  HUNTER  = {"agi","ap","int","sta"},          MAGE   = {"sp","int","spi","sta"},
+  WARLOCK = {"sp","sta","int","spi"},
+}
+BF.ALL = {"str","agi","sta","int","spi","ap","sp","heal","hit","crit","mp5","hp5","armor","breath","speed"}
+BF.SPECS = {
+  WARRIOR = { {"Arms / Fury", DEFAULTS.WARRIOR}, {"Protection", {"sta","armor","str","agi"}} },
+  ROGUE   = { {"All specs", DEFAULTS.ROGUE} },
+  HUNTER  = { {"All specs", DEFAULTS.HUNTER} },
+  PALADIN = { {"Holy", {"heal","int","mp5","spi","sta"}}, {"Protection", {"sta","armor","str","sp"}}, {"Retribution", {"str","ap","agi","sta","int"}} },
+  SHAMAN  = { {"Elemental", {"sp","int","mp5","sta"}}, {"Enhancement", {"str","agi","ap","sta","int"}}, {"Restoration", {"heal","int","mp5","sta"}} },
+  DRUID   = { {"Balance", {"sp","int","mp5","spi","sta"}}, {"Feral (Cat)", {"agi","str","ap","sta"}}, {"Feral (Bear)", {"sta","agi","armor","str"}}, {"Restoration", {"heal","int","mp5","spi","sta"}} },
+  PRIEST  = { {"Holy / Discipline", {"heal","int","spi","mp5","sta"}}, {"Shadow", {"sp","int","sta","spi"}} },
+  MAGE    = { {"All specs", DEFAULTS.MAGE} },
+  WARLOCK = { {"All specs", DEFAULTS.WARLOCK} },
+}
+function BF.Specs() local _, class = UnitClass("player"); return BF.SPECS[class] or {} end
+local function Fill(first)
+  local list, seen = {}, {}
+  for _, k in ipairs(first or {}) do if not seen[k] then list[#list+1] = k; seen[k] = true end end
+  for _, k in ipairs(BF.ALL) do if not seen[k] then list[#list+1] = k end end
+  return list
+end
+-- Stat priority for this character (spec preset first, every other stat after).
+function BF.Priority()
+  NeutzePantryCharDB = NeutzePantryCharDB or {}
+  local db = NeutzePantryCharDB
+  if not db.priority then local s = BF.Specs()[1]; db.priority = Fill(s and s[2]); db.spec = s and s[1] end
+  local seen = {}
+  for _, k in ipairs(db.priority) do seen[k] = true end
+  for _, k in ipairs(BF.ALL) do if not seen[k] then db.priority[#db.priority+1] = k end end   -- stats added later
+  return db.priority
+end
+function BF.ApplySpec(i)
+  local spec = BF.Specs()[i]
+  if not spec then return end
+  NeutzePantryCharDB = NeutzePantryCharDB or {}
+  NeutzePantryCharDB.priority, NeutzePantryCharDB.spec = Fill(spec[2]), spec[1]
+end
+function BF.SpecName()
+  local db = NeutzePantryCharDB
+  if db and db.spec then return db.spec end
+  if db and db.priority then return "Custom" end   -- saved before specs existed
+  BF.Priority()
+  return NeutzePantryCharDB.spec or "-"
+end
+-- Buttons whose key is not a plain stat borrow the rank of a related stat.
+local ALIAS = { fire="sp", frost="sp", shadow="sp", hp="sta", regen="hp5", mana="mp5" }
+function BF.Rank(key)
+  if key == "any" then return -1 end
+  if key == "fish" then return 9999 end
+  local extra = (key == "fire" or key == "frost" or key == "shadow") and 0.5 or 0   -- school power after plain spell power
+  key = ALIAS[key] or key
+  for i, k in ipairs(BF.Priority()) do if k == key then return i + extra end end
+  return 500                                    -- not a stat (rage, free action, ...): after the stats
+end
+
 -- sec = { kind, title, noun, order, cats, classify(name, text, use, deals) -> part or nil, useMax }
 function BF.RegisterSection(sec)
   table.insert(BF.sections, sec)
@@ -177,8 +236,18 @@ local function Section(sec, anchor, yOff)
   local h = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
   h:SetText(sec.title)
   h:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, yOff)
-  local buttons = {}
-  for _, c in ipairs(sec.cats) do
+  local buttons, cats = {}, {}
+  for i, c in ipairs(sec.cats) do cats[i] = c end
+  if sec.sortBySpec then                       -- best for your class/spec first
+    local pos = {}
+    for i, c in ipairs(cats) do pos[c] = i end
+    table.sort(cats, function(x, y)
+      local rx, ry = BF.Rank(x.key), BF.Rank(y.key)
+      if rx ~= ry then return rx < ry end
+      return pos[x] < pos[y]
+    end)
+  end
+  for _, c in ipairs(cats) do
     local b = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
     b:SetText(c.label)
     b:SetScript("OnClick", function() MakeOrPickup(c) end)
@@ -236,12 +305,54 @@ end
 
 function BF.AddHeight(px) usedHeight = usedHeight + px end
 
-panel:SetScript("OnShow", function(self)
-  if self.built then return end
-  self.built = true
-  local scroll = CreateFrame("ScrollFrame", nil, self, "UIPanelScrollFrameTemplate")
-  scroll:SetPoint("TOPLEFT", 0, -4)
-  scroll:SetPoint("BOTTOMRIGHT", -28, 4)
+local scroll, specDD, Build
+
+-- Class / spec dropdown at the top of the panel; picking a spec re-sorts every section.
+local function SpecRow(anchor)
+  local sl = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  sl:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -14)
+  local _, cname = UnitClass("player")
+  sl:SetText((UnitClass("player") or cname or "Class") .. " spec:")
+  local function pick(i) BF.ApplySpec(i); BF.Update(); Build() end
+  if UIDropDownMenu_Initialize then
+    if not specDD then
+      specDD = CreateFrame("Frame", "NeutzePantrySpecDropDown", content, "UIDropDownMenuTemplate")
+      UIDropDownMenu_SetWidth(specDD, 160)
+      UIDropDownMenu_Initialize(specDD, function()
+        for i, sp in ipairs(BF.Specs()) do
+          local info = UIDropDownMenu_CreateInfo()
+          info.text, info.checked = sp[1], (sp[1] == BF.SpecName())
+          info.func = function() CloseDropDownMenus(); pick(i) end
+          UIDropDownMenu_AddButton(info)
+        end
+      end)
+    end
+    specDD:SetParent(content); specDD:Show()
+    specDD:ClearAllPoints(); specDD:SetPoint("LEFT", sl, "RIGHT", -8, -2)
+    UIDropDownMenu_SetText(specDD, BF.SpecName())
+  else
+    local b = CreateFrame("Button", nil, content, "UIPanelButtonTemplate")
+    b:SetSize(170, 22); b:SetPoint("LEFT", sl, "RIGHT", 8, 0); b:SetText(BF.SpecName())
+    b:SetScript("OnClick", function()
+      local specs, cur = BF.Specs(), 0
+      for i, sp in ipairs(specs) do if sp[1] == BF.SpecName() then cur = i end end
+      pick(cur % math.max(1, #specs) + 1)
+    end)
+  end
+  local note = content:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  note:SetPoint("TOPLEFT", sl, "BOTTOMLEFT", 0, -10)
+  note:SetText("Buttons are sorted best-first for this spec. \"Best for my spec\" eats the right food for it.")
+  usedHeight = usedHeight + 44
+  return note
+end
+
+local function BuildPanel(self)
+  if not scroll then
+    scroll = CreateFrame("ScrollFrame", nil, self, "UIPanelScrollFrameTemplate")
+    scroll:SetPoint("TOPLEFT", 0, -4)
+    scroll:SetPoint("BOTTOMRIGHT", -28, 4)
+  end
+  if content then content:Hide() end
   content = CreateFrame("Frame", nil, scroll)
   local sw = scroll.GetWidth and scroll:GetWidth()
   if type(sw) == "number" and sw > 200 then CONTENT_W = math.floor(sw) - 40 end
@@ -256,7 +367,7 @@ panel:SetScript("OnShow", function(self)
   sub:SetWidth(CONTENT_W); sub:SetJustifyH("LEFT")
   sub:SetText("Click a button to create its macro (General tab) and pick it up. Each macro always uses the best matching item in your bags. Hover a button to see which item. Turn sections on or off with the Neutze's modules in the AddOns list.")
   usedHeight = 70
-  local anchor, gap = sub, -14
+  local anchor, gap = SpecRow(sub), -14
   local list = {}
   for _, sec in ipairs(BF.sections) do list[#list + 1] = sec end
   table.sort(list, function(a, b) return (a.display or a.order) < (b.display or b.order) end)
@@ -279,6 +390,14 @@ panel:SetScript("OnShow", function(self)
     gap = -14
   end
   content:SetHeight(usedHeight + 40)
+end
+Build = function() BuildPanel(panel) end
+BF.Rebuild = function() if scroll then Build() end end
+
+panel:SetScript("OnShow", function(self)
+  if self.built then return end
+  self.built = true
+  BuildPanel(self)
 end)
 
 if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then

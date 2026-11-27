@@ -1,5 +1,5 @@
 local BF = NeutzePantry
-BF.RegisterSection({ display=4, kind="flask", title="Flasks", noun="flask", order=30,
+BF.RegisterSection({ sortBySpec=true, display=4, kind="flask", title="Flasks", noun="flask", order=30,
   classify = function(name, text, use, deals)
     if BF.has(name, "flask") and use ~= "" and not deals then return use end
   end,

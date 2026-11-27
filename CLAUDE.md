@@ -13,7 +13,7 @@ Notes for Claude sessions working on this repo: Neutze's add-on suite for **Worl
 |---|---|---|
 | `NeutzePantry` | core | panel, bag scan, macro update; global `NeutzePantry` (`BF` locally) |
 | `NeutzePantry_Basics` | Basics | Buffet-style: PantryHP/MP (food or drink out of combat; healthstone or mana gem, then potion, in combat; Hearthstone if nothing), food, drink, potions, stone, gem, bandage |
-| `NeutzePantry_WellFed` | Well Fed | food per stat, AutoWellFed, AutoFishing (always last); **only Well Fed has a fallback**, which uses the lowest leftover food of the next stat in the priority; spec dropdown presets per class; `multi=true` (multi-stat food counts for each stat) |
+| `NeutzePantry_WellFed` | Well Fed | food per stat, AutoWellFed, AutoFishing (always last); **only Well Fed has a fallback**, which uses the lowest leftover food of the next stat in the priority; spec presets now live in the core (`BF.SPECS`, `BF.Priority()`, `BF.ApplySpec`, `BF.Rank`; dropdown at the top of the panel, `sortBySpec=true` sections sort best-first, `BF.Rebuild()` redraws); `multi=true` (multi-stat food counts for each stat) |
 | `NeutzePantry_Elixirs`, `_Flasks`, `_Potions`, `_Dynamite`, `_Alchemy` | categories | **no fallback**, on purpose |
 | `NeutzeCompanion` | Companion | per-character pet (`NeutzeCompanionDB`), re-summons whenever no pet is out; never in combat, stealth, mounted, taxi, casting or eating; writes the **character** macro `Companion` (pet icon, summons it if not out) |
 | `NeutzeStable` | Stable | per-character mount (`NeutzeStableDB`), writes the **character** macro `Mount` (`/dismount [mounted]` + `C_MountJournal.SummonByID(id)`) |
