@@ -138,21 +138,21 @@ local function UpdateStock(scan)
       if want > 0 and HasMacro(c.macro) then
         local key = STOCK_KEY[c.key] or c.key
         local e = best[key]
-        local have, kind
+        -- have = how many of the item this macro is FOR; a fallback item (other Well Fed food, ...) doesn't count
+        local have, kind, fallback = 0, nil, nil
         if e then
           have = e.n or 0
           d.last[c.macro] = e.id
         else
           local used = MacroItem(c.macro)
-          have = used and GetItemCount(used) or 0
-          kind = (used and c.key ~= "any") and "fallback" or (have == 0 and "empty") or nil
-          if c.key == "any" and used then d.last[c.macro] = used end
+          if c.key == "any" and used then have = GetItemCount(used); d.last[c.macro] = used
+          elseif used and not STOCK_KEY[c.key] then kind, fallback = "fallback", used end
         end
         if not kind and have < want then kind = (have == 0) and "empty" or "low" end
         state[c.macro] = state[c.macro] or {}
-        state[c.macro].stock, state[c.macro].n = kind, have
-        if kind then
-          shopping[#shopping + 1] = { macro=c.macro, label=c.label .. " (" .. c.macro .. ")", have=have, want=want, id=d.last[c.macro] }
+        state[c.macro].stock, state[c.macro].n = kind, fallback and GetItemCount(fallback) or have
+        if have < want then
+          shopping[#shopping + 1] = { macro=c.macro, label=c.label, have=have, want=want, id=d.last[c.macro], fallback=fallback }
         end
         -- chat warning when you use the last one / run out
         if d.chat and e and have <= 1 and not firstStock and (warned[c.macro] or 99) > have and not InCombatLockdown() then
@@ -170,7 +170,9 @@ end
 function A.ShoppingLines()
   local lines = {}
   for _, s in ipairs(shopping) do
-    lines[#lines + 1] = string.format("%s: %d / %d, buy %d x %s", s.label, s.have, s.want, s.want - s.have, s.id and ItemName(s.id) or "(none seen yet)")
+    local what = s.id and (" " .. ItemName(s.id)) or ""
+    local note = s.fallback and ("  (using " .. ItemName(s.fallback) .. " meanwhile)") or ""
+    lines[#lines + 1] = string.format("%s %s: %d / %d, buy %d%s%s", s.macro, s.label, s.have, s.want, s.want - s.have, what, note)
   end
   return lines
 end
@@ -492,19 +494,19 @@ SEC.custom = function(p, h)
 
   -- vendor restock
   local v = Note(p, c2, -10, "At a vendor, keep this many stacks of the best one you can use (hold Shift when you open the vendor to skip):", "GameFontNormalSmall")
-  local last = v
+  local first
   for i, k in ipairs({ { "drink", "Drinks" }, { "food", "Food (plain)" }, { "ammo", "Ammunition" } }) do
     local r = d.restock[k[1]]
     local cb = Check(p, v, (i - 1) * 180, -4, k[2], function() return r.on end, function(x) r.on = x end)
     NumBox(p, "LEFT", cb, 110, 0, function() return r.stacks end, function(n) r.stacks = math.min(n, 10) end)
-    last = cb
+    first = first or cb
   end
   height = height + 24 + 26
 
   -- stock targets
-  local s = Note(p, last, -10, "Keep at least (0 = no alert). Below it the button gets a steady border and a count: orange low, red empty, grey 'alt' = using a fallback:", "GameFontNormalSmall")
+  local s = Note(p, first, -10, "Keep at least (0 = no alert). Below it the button gets a steady border and a count: orange low, red empty, grey 'alt' = using a fallback:", "GameFontNormalSmall")
   local rows, col, prev, rowStart = 0, 0, nil, nil
-  local W = 200
+  local W = 190                                                   -- label 120 + box 40 + gap
   local perRow = math.max(1, math.floor(BF.CONTENT_W() / W))
   for _, sec in ipairs(BF.sections) do
     for _, c in ipairs(sec.kind and sec.cats or {}) do
@@ -516,8 +518,8 @@ SEC.custom = function(p, h)
         else
           lbl:SetPoint("TOPLEFT", rowStart, "TOPLEFT", col * W, 0)
         end
-        lbl:SetWidth(150); lbl:SetJustifyH("LEFT"); lbl:SetText(c.macro)
-        NumBox(p, "LEFT", lbl, 152, 0, function() return Target(sec, c) end, function(n) d.targets[c.macro] = n end)
+        lbl:SetWidth(120); lbl:SetJustifyH("LEFT"); lbl:SetText(c.macro)
+        NumBox(p, "LEFT", lbl, 124, 0, function() return Target(sec, c) end, function(n) d.targets[c.macro] = n end)
         col = col + 1
       end
     end
@@ -529,7 +531,8 @@ SEC.custom = function(p, h)
   local sh = Note(p, rowStart, -12, "Shopping list (also /np shop):", "GameFontNormalSmall")
   local lines = A.ShoppingLines()
   local body = Note(p, sh, -4, #lines > 0 and table.concat(lines, "\n") or "Nothing to buy.")
-  height = height + 30 + math.max(1, #lines) * 13
+  local th = body.GetStringHeight and body:GetStringHeight()
+  height = height + 30 + ((type(th) == "number" and th > 0) and th or math.max(1, #lines) * 13)
   SEC.height = height
   return body
 end
