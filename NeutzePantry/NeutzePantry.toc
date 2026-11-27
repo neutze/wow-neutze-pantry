@@ -3,7 +3,7 @@
 ## Notes: Neutze's Pantry core: one macro button per job for food, buff food, elixirs, flasks, potions, explosives and more - always the best item in your bags. /pantry
 ## Author: Johannes (written with Claude)
 ## Version: 0.0.1
-## IconTexture: Interface\Icons\INV_Misc_Food_15
+## IconTexture: Interface\AddOns\NeutzePantry\icon
 ## Category: Bags & Inventory
 ## Group: Neutze's
 ## OptionalDeps: Buffet

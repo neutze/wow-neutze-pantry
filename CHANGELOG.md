@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.0.1 — unreleased
+## v0.0.1 — 2026-11-27
 First release of Neutze's Pantry for WoW Forever.
 - Panel: /np, /pantry or /neutze. Click a button to create its macro (General tab) and pick it up; only macros you create are kept up to date. Scrollable, sections in a fixed order.
 - Every macro uses the best matching item in your bags and shows that item's icon.

@@ -1,12 +1,14 @@
+<img src="art/logo-400.png" width="128" align="right" alt="Neutze's logo">
+
 # wow-neutze
 
 Neutze's add-on suite for World of Warcraft: Forever. Every add-on folder in this repo is one add-on; copy the ones you want into `World of Warcraft/_forever_/Interface/AddOns/`.
 
 | Suite | Status |
 |---|---|
-| **Neutze's Pantry** (below) | v0.0.1 (coming) |
-| **Neutze's Companion** (below) | v0.0.1 (coming) |
-| **Neutze's Stable** (below) | v0.0.1 (coming) |
+| **Neutze's Pantry** (below) | v0.0.1 |
+| **Neutze's Companion** (below) | v0.0.1 |
+| **Neutze's Stable** (below) | v0.0.1 |
 
 ## Neutze's Pantry
 
@@ -30,6 +32,10 @@ Respects Buffet's ignore list if you also run Buffet, but doesn't need it.
 
 Items are recognised from their tooltip text (English client), so new Forever recipes work without an item list.
 
+![The /np panel: basics, Well Fed food and the spec dropdown](screenshots/pantry-panel.png)
+
+![Flasks, combat potions, explosives and alchemy items](screenshots/potions-explosives.png)
+
 ## Neutze's Companion
 
 Type the companion pet you want on this character (`/nc`, or Options > AddOns > Neutze's Companion). Whenever you have no pet out, it is summoned again: after login, loading screens, landing, dismounting, reviving, eating. A pet you call by hand is left alone.
@@ -42,8 +48,17 @@ It also writes a character macro **Companion** with the pet's icon, so you can p
 
 Type the mount for this character (bottom of `/np`, or `/stable Swift Palomino`). It writes a character macro **Mount**: mounts that mount, or dismounts if you're mounted. "Use current mount" takes the mount you're sitting on. Change the name and the macro updates.
 
-### Install
-Download the release zip and put every `NeutzePantry*`, `NeutzeCompanion` and `NeutzeStable` folder into `World of Warcraft/_forever_/Interface/AddOns/`.
+## Install
+With the CurseForge app: search for **Neutze's** and install it for World of Warcraft: Forever.
+
+By hand: download `Neutze-v0.0.1.zip` from [Releases](https://github.com/neutze/wow-neutze/releases) and put every `NeutzePantry*`, `NeutzeCompanion` and `NeutzeStable` folder into `World of Warcraft/_forever_/Interface/AddOns/`. Turn off the modules you don't want in the AddOns list.
+
+## Known limits
+- English game client only: items are recognised by their tooltip text.
+- No ignore list of its own yet; if Buffet is installed, its ignored items are skipped.
+- Macros are only changed out of combat.
+
+Bugs and ideas: [GitHub issues](https://github.com/neutze/wow-neutze/issues).
 
 ## License
 MIT

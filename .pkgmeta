@@ -17,6 +17,7 @@ ignore:
   - CLAUDE.md
   - .github
   - screenshots
+  - art
 
 manual-changelog:
   filename: CHANGELOG.md
