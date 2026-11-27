@@ -9,10 +9,10 @@ BF.RegisterSection({ sortBySpec=true, display=3.5, kind="scroll", title="Scrolls
     return b and ("#showtooltip\n/use [@player] item:" .. b.id)
   end,
   cats = {
-    { key="agi",   macro="ScrollAgility",   label="Agility",          words={"agility"} },
-    { key="str",   macro="ScrollStrength",  label="Strength",         words={"strength"} },
-    { key="sta",   macro="ScrollStamina",   label="Stamina",          words={"stamina"} },
-    { key="int",   macro="ScrollIntellect", label="Intellect",        words={"intellect"} },
-    { key="spi",   macro="ScrollSpirit",    label="Spirit",           words={"spirit"} },
-    { key="armor", macro="ScrollArmor",     label="Protection (armor)", words={"armor"} },
+    { key="agi",   macro="NPscAgi", old="ScrollAgility",   label="Agility",          words={"agility"} },
+    { key="str",   macro="NPscStr", old="ScrollStrength",  label="Strength",         words={"strength"} },
+    { key="sta",   macro="NPscSta", old="ScrollStamina",   label="Stamina",          words={"stamina"} },
+    { key="int",   macro="NPscInt", old="ScrollIntellect", label="Intellect",        words={"intellect"} },
+    { key="spi",   macro="NPscSpi", old="ScrollSpirit",    label="Spirit",           words={"spirit"} },
+    { key="armor", macro="NPscArmor", old="ScrollArmor",     label="Protection (armor)", words={"armor"} },
   }})

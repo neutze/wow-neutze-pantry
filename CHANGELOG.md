@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Every macro is now named NP + module code + item (NPbaHP, NPwfAP, NPelAgi, NPwbAuto, ...), so they sort by module. Old macros (PantryHP, AutoAP, ...) are renamed in place on login, so they stay on your bars. A leftover duplicate is deleted, and Alerts settings move along. Only General-tab macros that Pantry wrote are touched.
 - New modules: Protection Potions, Scrolls, Juju & Zanza, Runes, Weapon Buffs (stones, oils, poisons; Auto picks by spec and weapon) and Ammunition (arrows or bullets for your ranged weapon).
 - Pantry is now the parent of the suite: Neutze's Companion, Stable and Macros require it and put their options pages under Neutze's Pantry (`NeutzePantry.AddSubPage`).
 - Macros also update when you change equipment.

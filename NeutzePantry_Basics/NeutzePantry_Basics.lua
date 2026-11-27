@@ -46,13 +46,13 @@ BF.RegisterSection({ display=1, kind="basic", title="Basics: food, drink, potion
     return "#showtooltip\n/use " .. table.concat(parts, "; ")
   end,
   cats = {
-    { key="hp",      macro="PantryHP",      label="Health (auto)", tip="Out of combat: best food (Hearthstone if none). In combat: Healthstone, else best health potion.",  words={"pool:hp-never"} },
-    { key="mp",      macro="PantryMP",      label="Mana (auto)", tip="Out of combat: best drink (Hearthstone if none). In combat: mana gem, else best mana potion.",   words={"pool:mp-never"} },
-    { key="food",    macro="PantryFood",    label="Food only",          words={"pool:food"} },
-    { key="drink",   macro="PantryDrink",   label="Drink only",         words={"pool:drink"} },
-    { key="hppot",   macro="PantryHPPot",   label="Health potion",      words={"pool:hppot"} },
-    { key="mppot",   macro="PantryMPPot",   label="Mana potion",        words={"pool:mppot"} },
-    { key="stone",   macro="PantryStone",   label="Healthstone",        words={"pool:stone"} },
-    { key="gem",     macro="PantryGem",     label="Mana gem",           words={"pool:gem"} },
-    { key="bandage", macro="PantryBandage", label="Bandage",            words={"pool:bandage"} },
+    { key="hp",      macro="NPbaHP", old="PantryHP",      label="Health (auto)", tip="Out of combat: best food (Hearthstone if none). In combat: Healthstone, else best health potion.",  words={"pool:hp-never"} },
+    { key="mp",      macro="NPbaMP", old="PantryMP",      label="Mana (auto)", tip="Out of combat: best drink (Hearthstone if none). In combat: mana gem, else best mana potion.",   words={"pool:mp-never"} },
+    { key="food",    macro="NPbaFood", old="PantryFood",    label="Food only",          words={"pool:food"} },
+    { key="drink",   macro="NPbaDrink", old="PantryDrink",   label="Drink only",         words={"pool:drink"} },
+    { key="hppot",   macro="NPbaHPPot", old="PantryHPPot",   label="Health potion",      words={"pool:hppot"} },
+    { key="mppot",   macro="NPbaMPPot", old="PantryMPPot",   label="Mana potion",        words={"pool:mppot"} },
+    { key="stone",   macro="NPbaStone", old="PantryStone",   label="Healthstone",        words={"pool:stone"} },
+    { key="gem",     macro="NPbaGem", old="PantryGem",     label="Mana gem",           words={"pool:gem"} },
+    { key="bandage", macro="NPbaBandage", old="PantryBandage", label="Bandage",            words={"pool:bandage"} },
   }})

@@ -24,7 +24,7 @@ BF.RegisterSection({ display=6.2, kind="ammo", title="Ammunition", noun="ammunit
     return b and ("#showtooltip\n/use item:" .. b.id)    -- using ammo in your bags loads it
   end,
   cats = {
-    { key="auto",   macro="PantryAmmo",   label="Ammo for my weapon", tip="Loads your best arrows if you have a bow or crossbow equipped, your best bullets if you have a gun.", words={"ammo:auto-never"} },
-    { key="arrow",  macro="PantryArrows", label="Arrows",  words={"ammo:arrow "} },
-    { key="bullet", macro="PantryBullets",label="Bullets", words={"ammo:bullet "} },
+    { key="auto",   macro="NPamAuto", old="PantryAmmo",   label="Ammo for my weapon", tip="Loads your best arrows if you have a bow or crossbow equipped, your best bullets if you have a gun.", words={"ammo:auto-never"} },
+    { key="arrow",  macro="NPamArrow", old="PantryArrows", label="Arrows",  words={"ammo:arrow "} },
+    { key="bullet", macro="NPamBullet", old="PantryBullets",label="Bullets", words={"ammo:bullet "} },
   }})

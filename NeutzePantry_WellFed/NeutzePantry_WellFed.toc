@@ -1,6 +1,6 @@
 ## Interface: 16001, 11509
 ## Title: Neutze's Well Fed
-## Notes: Buff food per stat with a fallback to your other Well Fed food (AutoStamina, AutoWellFed, AutoFishing, ...). Part of Neutze's Pantry. /np
+## Notes: Buff food per stat with a fallback to your other Well Fed food (NPwfSta, NPwfBest, NPwfFish, ...). Part of Neutze's Pantry. /np
 ## Author: Johannes (written with Claude)
 ## Version: 0.0.1
 ## IconTexture: Interface\Icons\INV_Misc_Food_14
