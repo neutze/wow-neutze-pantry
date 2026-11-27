@@ -56,7 +56,12 @@ local function Match(sec, part, name, id, best)
   for _, c in ipairs(sec.cats) do
     for _, w in ipairs(c.words) do
       if (c.byName and name:find(w, 1, true)) or part:find(w, 1, true) then
-        if not best[c.key] or num > best[c.key].v then best[c.key] = { id=id, v=num } end
+        local e = best[c.key]
+        if not e then best[c.key] = { id=id, v=num, loId=id, loV=num }
+        else
+          if num > e.v then e.id, e.v = id, num end
+          if num < e.loV then e.loId, e.loV = id, num end
+        end
         return   -- an item counts for its first (most specific) category only
       end
     end
@@ -188,7 +193,10 @@ panel:SetScript("OnShow", function(self)
     none:SetPoint("TOPLEFT", sub, "BOTTOMLEFT", 0, -12)
     none:SetText("No Neutze's Pantry modules are enabled.")
   end
-  for _, sec in ipairs(BF.sections) do anchor = Section(sec, anchor, gap); gap = -12 end
+  for _, sec in ipairs(BF.sections) do
+    anchor = Section(sec, anchor, gap); gap = -12
+    if sec.extraUI then anchor = sec.extraUI(self, anchor) or anchor end
+  end
 end)
 
 if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
@@ -200,7 +208,7 @@ end
 
 SLASH_NEUTZEPANTRY1 = "/pantry"
 SLASH_NEUTZEPANTRY2 = "/np"
-SLASH_NEUTZEPANTRY3 = "/bf"
+SLASH_NEUTZEPANTRY3 = "/neutze"
 SlashCmdList.NEUTZEPANTRY = function(msg)
   if msg and msg:lower():find("list") then
     BF.Update()

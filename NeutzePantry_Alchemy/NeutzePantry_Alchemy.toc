@@ -2,7 +2,7 @@
 ## Title: Neutze's Alchemy Bombs
 ## Notes: Alchemy damage item button (AlchemyDamage), best tier first. Part of Neutze's Pantry (needs the core). /pantry
 ## Author: Johannes (written with Claude)
-## Version: 0.0.1
+## Version: 0.0.3
 ## Dependencies: NeutzePantry
 ## X-Part-Of: Neutze's Pantry
 

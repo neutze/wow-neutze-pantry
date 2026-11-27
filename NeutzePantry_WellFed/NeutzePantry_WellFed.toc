@@ -1,8 +1,8 @@
 ## Interface: 16001, 11509
 ## Title: Neutze's Well Fed
-## Notes: Well Fed food buttons per stat (AutoStamina, AutoAgility, ...). Part of Neutze's Pantry (needs the core). /pantry
+## Notes: Buff food per stat with a fallback to your other Well Fed food (AutoStamina, AutoWellFed, AutoFishing, ...). Part of Neutze's Pantry. /np
 ## Author: Johannes (written with Claude)
-## Version: 0.0.1
+## Version: 0.0.3
 ## Dependencies: NeutzePantry
 ## X-Part-Of: Neutze's Pantry
 

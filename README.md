@@ -4,7 +4,7 @@ Neutze's add-on suite for World of Warcraft: Forever. Every add-on folder in thi
 
 | Suite | Status |
 |---|---|
-| **Neutze's Pantry** (below) | v0.0.1 |
+| **Neutze's Pantry** (below) | v0.0.3 |
 | Neutze's Companion (auto-summon your chosen pet) | planned |
 | Neutze's Stable (mount macro per character) | planned |
 
@@ -12,20 +12,20 @@ Neutze's add-on suite for World of Warcraft: Forever. Every add-on folder in thi
 
 One macro button per job, always using the **best item in your bags**. Built for World of Warcraft: Forever.
 
-Type `/np` (or `/pantry`), click a button to create its macro, drop it on your bar. When you carry better items, the macro updates itself (out of combat). Every macro uses the empty "?" icon, so the button shows the item it will use.
+Type `/np` (or `/pantry`, `/neutze`), click a button to create its macro, drop it on your bar. When you carry better items, the macro updates itself (out of combat). Every macro uses the empty "?" icon, so the button shows the item it will use.
 
 | Add-on | What you get |
 |---|---|
 | **Neutze's Pantry** (core) | The panel, bag scanning and macro updating. Required by all modules. |
 | **Neutze's Basics** | Buffet-style buttons: PantryHP (food out of combat; healthstone, then health potion in combat; Hearthstone if no food), PantryMP (drink; mana gem, then mana potion), food only, drink only, potions, healthstone, mana gem, bandage. |
-| **Neutze's Well Fed** | Buff food per stat: AutoStamina, AutoAgility, AutoSpellPower, ... |
+| **Neutze's Well Fed** | Buff food per stat (AutoStamina, AutoAgility, ...), AutoWellFed (best food of your top stat) and AutoFishing. When a stat runs out it falls back to your other Well Fed food, lowest leftover first, following your per-character stat priority. |
 | **Neutze's Elixirs** | Elixirs per stat: ElixirAgility, ElixirFire, ElixirHealth, ... |
 | **Neutze's Flasks** | Flasks per stat: FlaskHealth, FlaskSpellPower, FlaskMana, ... |
 | **Neutze's Battle Potions** | Short combat potions: PotionRage, PotionFreeAction, PotionSpeed, ... |
 | **Neutze's Dynamite** | Engineering explosives: Dynamite, Grenade (stun bombs), Bomb — highest tier first. |
 | **Neutze's Alchemy Bombs** | Your strongest alchemy damage item. |
 
-Turn modules on or off in the AddOns list. `/np list` prints what every macro would use.
+Download the one release zip and turn modules on or off in the AddOns list. `/np list` prints what every macro would use.
 Respects Buffet's ignore list if you also run Buffet, but doesn't need it.
 
 Items are recognised from their tooltip text (English client), so new Forever recipes work without an item list.

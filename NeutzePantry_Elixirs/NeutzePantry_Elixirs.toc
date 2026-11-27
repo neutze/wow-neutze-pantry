@@ -2,7 +2,7 @@
 ## Title: Neutze's Elixirs
 ## Notes: Elixir buttons per stat (ElixirAgility, ElixirFire, ...). Part of Neutze's Pantry (needs the core). /pantry
 ## Author: Johannes (written with Claude)
-## Version: 0.0.1
+## Version: 0.0.3
 ## Dependencies: NeutzePantry
 ## X-Part-Of: Neutze's Pantry
 
