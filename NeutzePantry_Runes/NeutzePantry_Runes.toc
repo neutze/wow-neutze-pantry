@@ -1,0 +1,12 @@
+## Interface: 16001, 11509
+## Title: Neutze's Runes
+## Notes: Demonic Rune and Dark Rune button (PantryRune). Part of Neutze's Pantry (needs the core). /np
+## Author: Johannes (written with Claude)
+## Version: 0.0.1
+## IconTexture: Interface\Icons\INV_Misc_Rune_04
+## Category: Bags & Inventory
+## Group: Neutze's
+## Dependencies: NeutzePantry
+## X-Part-Of: Neutze's Pantry
+
+NeutzePantry_Runes.lua

@@ -1,4 +1,6 @@
--- Neutze's Pantry core. Modules (NeutzePantry_WellFed, _Elixirs, _Flasks, _Potions, _Dynamite, _Alchemy, _Basics) register sections.
+-- Neutze's Pantry core. Modules (NeutzePantry_Basics, _WellFed, _Elixirs, _Flasks, _Potions, _Protection, _Scrolls, _Juju,
+-- _Runes, _WeaponBuffs, _Ammo, _Dynamite, _Alchemy) register sections. Neutze's Companion, Stable and Macros need this core too:
+-- they add their own pages under Neutze's Pantry in the options (BF.AddSubPage).
 -- Each section is a group of macro buttons; each macro always uses the strongest matching item in your bags.
 NeutzePantry = NeutzePantry or {}
 local BF = NeutzePantry
@@ -181,6 +183,7 @@ local ev = CreateFrame("Frame")
 ev:RegisterEvent("PLAYER_ENTERING_WORLD")
 ev:RegisterEvent("BAG_UPDATE_DELAYED")
 ev:RegisterEvent("PLAYER_REGEN_ENABLED")
+ev:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")   -- weapon buffs and ammo depend on what you wield
 ev:SetScript("OnEvent", function(_, e)
   if pending then return end
   pending = true
@@ -259,7 +262,7 @@ local function Section(sec, anchor, yOff)
       local pick = all[c.key]
       if sec.body and not pick then
         local body = sec.body(c, all)
-        local id = body and tonumber(body:match("item:(%d+)[^\n]*$"))
+        local id = body and tonumber(body:match("item:(%d+)[^\n]*$") or body:match("item:(%d+)"))
         pick = id and { id = id, v = 0 }
       end
       GameTooltip:AddLine(pick and ("Uses: " .. ((GetItemInfo(pick.id)) or ("item " .. pick.id)) .. (pick.v > 0 and (" (" .. pick.v .. ")") or "")) or ("No " .. c.label .. " " .. sec.noun .. " in your bags"), 1, 1, 1, true)
@@ -433,4 +436,20 @@ end
 function BF.Open()
   if category and Settings and Settings.OpenToCategory then Settings.OpenToCategory(category:GetID())
   elseif InterfaceOptionsFrame_OpenToCategory then InterfaceOptionsFrame_OpenToCategory(panel); InterfaceOptionsFrame_OpenToCategory(panel) end
+end
+
+-- Sub-pages: Neutze's add-ons that need Pantry (Companion, Stable, Macros) put their own options page
+-- under "Neutze's Pantry". Returns a function that opens that page.
+function BF.AddSubPage(page)
+  page.parent = panel.name                       -- old options window: nest under Neutze's Pantry
+  local sub
+  if category and Settings and Settings.RegisterCanvasLayoutSubcategory then
+    sub = Settings.RegisterCanvasLayoutSubcategory(category, page, page.name)
+  elseif InterfaceOptions_AddCategory then
+    InterfaceOptions_AddCategory(page)
+  end
+  return function()
+    if sub and Settings and Settings.OpenToCategory then Settings.OpenToCategory(sub:GetID())
+    elseif InterfaceOptionsFrame_OpenToCategory then InterfaceOptionsFrame_OpenToCategory(page); InterfaceOptionsFrame_OpenToCategory(page) end
+  end
 end
