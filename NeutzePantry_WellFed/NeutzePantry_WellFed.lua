@@ -7,6 +7,7 @@ local BF = NeutzePantry
 local FED = {"well fed", "also increase", "nutritious"}
 
 local CATS = {
+  { key="any",   macro="AutoWellFed",    label="Best for my spec", tip="Eats the best food for your class and spec (the Spec dropdown below): your top stat first, then down the list.", words={"pool:never"} },
   { key="fish",  macro="AutoFishing",    label="Fishing",      words={"fishing"} },
   { key="ap",    macro="AutoAP",         label="Attack Power", words={"attack power"} },
   { key="heal",  macro="AutoHealing",    label="Healing",      words=BF.HEAL_WORDS },
@@ -23,7 +24,6 @@ local CATS = {
   { key="int",   macro="AutoIntellect",  label="Intellect",    words={"intellect"} },
   { key="sta",   macro="AutoStamina",    label="Stamina",      words={"stamina"} },
   { key="spi",   macro="AutoSpirit",     label="Spirit",       words={"spirit"} },
-  { key="any",   macro="AutoWellFed",    label="Any (priority)", tip="Best food of your top stat; falls back down your priority list.", words={"pool:never"} },
 }
 local LABEL = {}; for _, c in ipairs(CATS) do LABEL[c.key] = c.label end
 
