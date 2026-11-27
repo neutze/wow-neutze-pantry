@@ -1,0 +1,13 @@
+## Interface: 16001, 11509
+## Title: Neutze's Alerts
+## Notes: Reminders for Neutze's Pantry: glow when Well Fed, an elixir or a flask is missing or running out, low-stock markers on your macros, a shopping list (/np shop) and automatic vendor restock of drinks, food and ammunition. Part of Neutze's Pantry (needs the core). /np
+## Author: Johannes (written with Claude)
+## Version: 0.0.1
+## IconTexture: Interface\Icons\INV_Misc_Bell_01
+## Category: Bags & Inventory
+## Group: Neutze's
+## Dependencies: NeutzePantry
+## OptionalDeps: NeutzePantry_Basics, NeutzePantry_WellFed, NeutzePantry_Elixirs, NeutzePantry_Flasks, NeutzePantry_Potions, NeutzePantry_Ammo
+## X-Part-Of: Neutze's Pantry
+
+NeutzePantry_Alerts.lua
