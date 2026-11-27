@@ -108,6 +108,18 @@ function BF.MerchantText(i)
   return ReadTip()
 end
 BF.GetItemID, BF.GetNumSlots = GetItemID, GetNumSlots
+-- classID, subclassID of an item. GetItemInfoInstant is not a global in the Forever client, so try
+-- C_Item, then GetItemInfo (returns 12 and 13; nil until the item is cached).
+local Instant = GetItemInfoInstant or (C_Item and C_Item.GetItemInfoInstant)
+function BF.ItemClass(id)
+  if not id then return end
+  if Instant then
+    local _, _, _, _, _, classID, sub = Instant(id)
+    if classID then return classID, sub end
+  end
+  local r = { GetItemInfo(id) }
+  return r[12], r[13]
+end
 function BF.SlotCount(bag, slot)
   if C_Container and C_Container.GetContainerItemInfo then
     local i = C_Container.GetContainerItemInfo(bag, slot); return i and i.stackCount or 0
