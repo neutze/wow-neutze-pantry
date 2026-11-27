@@ -8,7 +8,7 @@ end
 
 local function item(best, key) return best[key] and ("item:" .. best[key].id) end
 
-BF.RegisterSection({ display=1, kind="basic", title="Basics: food, drink, potions, stones", noun="item", order=70, useMax=true,
+BF.RegisterSection({ page="Basics", display=1, kind="basic", title="Basics: food, drink, potions, stones", noun="item", order=70, useMax=true,
   classify = function(name, text, use, deals)
     if use == "" then return nil end
     local conjured = text:find("conjured item", 1, true)

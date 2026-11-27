@@ -45,7 +45,7 @@ local function AutoPick(best, slot)
 end
 BF.WeaponAutoPick = AutoPick
 
-BF.RegisterSection({ display=6.5, kind="weapon", title="Weapon buffs (left-click: main hand, right-click: off hand)", noun="weapon buff", order=15,
+BF.RegisterSection({ page="Weapon Buffs", display=6.5, kind="weapon", title="Weapon buffs (left-click: main hand, right-click: off hand)", noun="weapon buff", order=15,
   classify = function(name, text, use, deals)
     if use == "" then return nil end
     for _, k in ipairs(KINDS) do

@@ -32,7 +32,7 @@ local Priority = BF.Priority
 
 local function use(id) return "#showtooltip\n/use item:" .. id end
 
-BF.RegisterSection({ display=2, kind="food", title="Well Fed food", noun="food", order=60, multi=true, sortBySpec=true,
+BF.RegisterSection({ page="Well Fed", display=2, kind="food", title="Well Fed food", noun="food", order=60, multi=true, sortBySpec=true,
   classify = function(name, text)
     local pos
     for _, w in ipairs(FED) do local q = text:find(w, 1, true); if q and (not pos or q < pos) then pos = q end end

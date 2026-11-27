@@ -1,6 +1,6 @@
 -- Runes: Demonic Rune / Dark Rune (mana for health, shared cooldown), biggest first.
 local BF = NeutzePantry
-BF.RegisterSection({ display=1.5, kind="rune", title="Runes", noun="rune", order=65, useMax=true,
+BF.RegisterSection({ page="Runes", display=1.5, kind="rune", title="Runes", noun="rune", order=65, useMax=true,
   classify = function(name, text, use, deals)
     if BF.has(name, "demonic rune", "dark rune") and use ~= "" then return use end
   end,

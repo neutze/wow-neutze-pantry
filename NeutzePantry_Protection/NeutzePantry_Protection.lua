@@ -1,6 +1,6 @@
 -- Protection potions: one-hour "absorbs X fire damage" potions, strongest (Greater) first.
 local BF = NeutzePantry
-BF.RegisterSection({ display=5.5, kind="protection", title="Protection potions", noun="protection potion", order=55,
+BF.RegisterSection({ page="Protection Potions", display=5.5, kind="protection", title="Protection potions", noun="protection potion", order=55,
   classify = function(name, text, use, deals)
     if BF.has(name, "protection") and BF.has(name, "potion", "draught") and use:find("absorb", 1, true) then return use end
   end,

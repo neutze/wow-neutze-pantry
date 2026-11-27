@@ -11,7 +11,7 @@ local function WantedAmmo()
   if sub:find("gun", 1, true) then return "bullet" end
 end
 
-BF.RegisterSection({ display=6.2, kind="ammo", title="Ammunition", noun="ammunition", order=75,
+BF.RegisterSection({ page="Ammunition", display=6.2, kind="ammo", title="Ammunition", noun="ammunition", order=75,
   classify = function(name, text, use, deals)
     local dps = text:match("adds ([%d%.]+) damage per second")
     if not dps then return nil end
