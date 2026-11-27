@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- New module **Pet Food** (hunters only): one Feed Pet macro, NPpfFeed, that feeds the right food for your pet's diet (or a food you pick by name or item ID). It eats leftovers first as long as the pet still loves them. At a vendor it keeps N stacks (default 1) of the best pet food you can use; Shift skips it. A chat reminder fires when your pet is not happy, and Alerts treats NPpfFeed like any other macro (keep at least 10, shopping list). `/np petfood` shows what your pet eats.
 - Fixed a Lua error at every vendor ("attempt to call a nil value", Alerts line 270). The Forever client has no global GetItemInfoInstant, so Pantry now uses its own helper (BF.ItemClass) with C_Item and GetItemInfo as fallbacks. Vendor restock also skips the vendor entirely when every restock option is off.
 - Options pages no longer stay blank sometimes. They build one frame after they open, rebuild when they get their real width, and if a page fails to build, the error is printed in chat and it tries again the next time you open it.
 - Options: every enabled module has its own page under Neutze's Pantry (Basics, Well Fed, Elixirs, ..., Alerts), followed by Companion, Stable and Macros. The first page only holds the spec picker and your role (Tank, Healer or Damage, from the spec). Disabled modules have no page.
