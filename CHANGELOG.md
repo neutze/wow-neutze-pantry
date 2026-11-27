@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Alerts: the stock grid, shopping list and the sections after it start at the left edge again (they were anchored under the last vendor checkbox and ran off the panel). The shopping list no longer shows negative amounts: a macro on a fallback counts 0 of its own item and says what it uses meanwhile. Items never seen are listed without "(none seen yet)".
 - Every macro is now named NP + module code + item (NPbaHP, NPwfAP, NPelAgi, NPwbAuto, ...), so they sort by module. Old macros (PantryHP, AutoAP, ...) are renamed in place on login, so they stay on your bars. A leftover duplicate is deleted, and Alerts settings move along. Only General-tab macros that Pantry wrote are touched.
 - New modules: Protection Potions, Scrolls, Juju & Zanza, Runes, Weapon Buffs (stones, oils, poisons; Auto picks by spec and weapon) and Ammunition (arrows or bullets for your ranged weapon).
 - Pantry is now the parent of the suite: Neutze's Companion, Stable and Macros require it and put their options pages under Neutze's Pantry (`NeutzePantry.AddSubPage`).
