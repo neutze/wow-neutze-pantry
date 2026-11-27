@@ -125,6 +125,10 @@ for _, e in ipairs({ "PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA", "PLAYER_U
 end
 f:SetScript("OnEvent", function(_, e, unit)
   if e == "UNIT_SPELLCAST_STOP" and unit ~= "player" then return end
+  if (e == "PLAYER_ENTERING_WORLD" and not NC.macroDone) or (e == "PLAYER_REGEN_ENABLED" and NC.macroPending) then
+    NC.macroDone, NC.macroPending = true, false
+    if C_Timer and NC.WriteMacro then C_Timer.After(3, NC.WriteMacro) end   -- keep the "Companion" macro current
+  end
   Soon(e == "PLAYER_ENTERING_WORLD" and 4 or 1.5)
 end)
 if C_Timer and C_Timer.NewTicker then C_Timer.NewTicker(5, function() NC.Check() end) end  -- after eating, landing, ...
@@ -134,14 +138,53 @@ local panel = CreateFrame("Frame")
 panel.name = "Neutze's Companion"
 local category, status, box
 
+-- ---------- character macro "Companion" (so the pet shows on your bar) ----------
+local MACRO = "Companion"
+local function PetIcon(pet)
+  if pet.guid and C_PetJournal and C_PetJournal.GetPetInfoByPetID then
+    local icon = select(9, C_PetJournal.GetPetInfoByPetID(pet.guid))
+    if icon then return icon end
+  end
+  if pet.index and GetCompanionInfo then
+    local _, _, _, icon = GetCompanionInfo("CRITTER", pet.index)
+    if icon then return icon end
+  end
+  return 134400
+end
+
+local function MacroBody(pet)
+  if pet.guid then
+    return '/run local g="' .. pet.guid .. '" if C_PetJournal.GetSummonedPetGUID()~=g then C_PetJournal.SummonPetByGUID(g) end'
+  end
+  return "/run CallCompanion(\"CRITTER\"," .. pet.index .. ")"
+end
+
+-- Create or update the macro; returns a short note (or nil).
+local function WriteMacro(pet)
+  if not pet or not CreateMacro then return nil end
+  if InCombatLockdown() then NC.macroPending = true; return "Macro updates after combat." end
+  local idx = GetMacroIndexByName(MACRO)
+  if idx and idx > 0 then EditMacro(idx, MACRO, PetIcon(pet), MacroBody(pet)); return nil end
+  local _, perChar = GetNumMacros()
+  if perChar and perChar >= (MAX_CHARACTER_MACROS or 18) then
+    return "|cffff5555Character macro tab is full|r - free a slot for the \"Companion\" macro."
+  end
+  CreateMacro(MACRO, PetIcon(pet), MacroBody(pet), true)
+  return "Macro |cffffd200Companion|r created on the character tab - drag it to your bar."
+end
+NC.WriteMacro = function() return WriteMacro(FindPet(DB().name)) end
+
 local function SetPet(name)
   local d = DB()
+  NC.lastNote = nil
   d.name = name and name:gsub("^%s+", ""):gsub("%s+$", "") or ""
   local pet = FindPet(d.name)
   if d.name == "" then
     if status then status:SetText("No companion set for this character.") end
   elseif pet then
-    if status then status:SetText("|cff33ff33Found:|r " .. pet.name .. " - it will be summoned whenever no pet is out.") end
+    local note = WriteMacro(pet)
+    if status then status:SetText("|cff33ff33Found:|r " .. pet.name .. " - it will be summoned whenever no pet is out." .. (note and ("  " .. note) or "")) end
+    NC.lastNote = note
     if CanSummon() and (not pet.guid or SummonedGUID() ~= pet.guid) then Summon(pet) end   -- swap to the new choice now
   else
     if status then status:SetText("|cffff5555Not found|r in your pet journal. Check the spelling (the pet's name as shown in the journal).") end
@@ -247,7 +290,8 @@ if NeutzePantry and NeutzePantry.RegisterSection and NeutzePantry.FieldRow then
     local d = DB()
     if not d.name or d.name == "" then return "No companion set for this character." end
     local pet = FindPet(d.name)
-    return pet and ("|cff33ff33Found:|r " .. pet.name) or "|cffff5555Not found|r in your pet journal."
+    if not pet then return "|cffff5555Not found|r in your pet journal." end
+    return "|cff33ff33Found:|r " .. pet.name .. "  " .. (NC.lastNote or "Character macro |cffffd200Companion|r summons it.")
   end
   NeutzePantry.RegisterSection({ display = 90, order = 900, title = "Companion (Neutze's Companion)", height = 62,
     custom = function(parent, anchor)
